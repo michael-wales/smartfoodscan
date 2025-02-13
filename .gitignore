@@ -1,1 +1,12 @@
-raw_data/
+data/
+
+# Jupyter Notebook #
+.ipynb_checkpoints/
+.pytest_cache
+__pycache__
+*checkpoint.ipynb
+
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+.env
