@@ -8,3 +8,12 @@ pandas
 matplotlib
 seaborn
 scikit-learn
+
+# HTTP
+requests
+
+# File utilities
+gzip
+shutil
+pathlib
+csv
