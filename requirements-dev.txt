@@ -1,0 +1,19 @@
+# Minimal requirements
+pytest
+pylint
+ipdb
+jupyterlab
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+
+# HTTP
+requests
+
+# File utilities
+gzip
+shutil
+pathlib
+csv
