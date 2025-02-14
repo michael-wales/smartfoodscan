@@ -13,7 +13,6 @@ scikit-learn
 requests
 
 # File utilities
-gzip
 shutil
 pathlib
 csv
