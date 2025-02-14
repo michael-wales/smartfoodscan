@@ -13,6 +13,4 @@ scikit-learn
 requests
 
 # File utilities
-shutil
 pathlib
-csv
