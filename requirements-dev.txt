@@ -21,3 +21,5 @@ streamlit
 #Barcode
 pyzbar
 opencv-python
+# Prettify
+tabulate
