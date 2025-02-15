@@ -5,15 +5,19 @@ from product_info.api_fetcher import get_product_info
 # App title
 st.title("SmartFoodScan 🍏")
 
-# Ask user to upload an image
-uploaded_file = st.file_uploader("Upload a barcode image", type=["jpg", "png", "jpeg"])
+# User Input
+# 📷 Priority: camara
+image = st.camera_input("Take a picture of the product barcode 📷")
 
-if uploaded_file:
-    # Extract barcode from image
-    barcode = barcode_reader(uploaded_file)
+# 🖼️ Secondary option: upload picture from device
+if not image:
+    image = st.file_uploader("Or upload a barcode image from your device", type=["png", "jpg", "jpeg"])
+
+# Barcode reader
+if image:
+    barcode = barcode_reader(image)
 
     if barcode:
-        # Show user the barcode
         st.success(f"Product barcode: {barcode}")
         #Fetch product info from Open Food Facts API
         product_info = get_product_info(barcode)
