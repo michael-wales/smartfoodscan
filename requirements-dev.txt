@@ -17,3 +17,9 @@ pathlib
 
 # Prettify
 tabulate
+
+# Jupyter
+nbdime
+
+# Setup
+setuptools
