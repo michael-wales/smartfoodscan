@@ -25,3 +25,9 @@ cv2
 
 # Prettify
 tabulate
+
+# Jupyter
+nbdime
+
+# Setup
+setuptools
