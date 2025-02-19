@@ -15,9 +15,10 @@ requests
 json
 
 # File utilities
-shutil
 pathlib
-csv
 
 #barcode 
 cv2
+
+# Prettify
+tabulate
