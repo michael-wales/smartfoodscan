@@ -3,7 +3,7 @@ from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 
 # App title
-st.title("SmartFoodScan 🍏")
+st.title("SmartFoodScan 🛒")
 
 # User Input
 # 📷 Priority: camara
@@ -11,7 +11,7 @@ image = st.camera_input("Take a picture of the product barcode 📷")
 
 # 🖼️ Secondary option: upload picture from device
 if not image:
-    image = st.file_uploader("Or upload a barcode image from your device", type=["png", "jpg", "jpeg"])
+    image = st.file_uploader("Or upload a barcode image from your device 📁", type=["png", "jpg", "jpeg"])
 
 # Barcode reader
 if image:
@@ -34,15 +34,17 @@ if image:
 
             # Display image if available
             if "image_url" in product_info:
-                st.image(product_info["image_url"], caption="Product Image", use_column_width=True)
+                st.image(product_info["image_url"], caption="Product Image")
 
             # Check for allergy suitability
-            allergens = product_info.get("allergens", "").lower()
+            allergens = product_info.get("allergens_from_ingredients", "").lower()
+            #st.write(f"**Allergens:** {allergens}")
             common_allergens = ["gluten", "almond", "lactose", "egg"]
             unsuitable = [a for a in common_allergens if a in allergens]
 
             if unsuitable:
                 st.error(f"⚠️ Not suitable for: {', '.join(unsuitable)}")
+
             else:
                 st.success("✅ Suitable for common allergies!")
         else:

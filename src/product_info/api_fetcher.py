@@ -7,4 +7,7 @@ def get_product_info(barcode):
         data = response.json()
         if data.get("status") == 1:
             return data["product"]
-    return None
+        else:
+            return f"Product not found"
+    else:
+        return f"Error connection with the API: {response.status_code}"
