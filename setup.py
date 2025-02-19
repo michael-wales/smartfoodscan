@@ -11,6 +11,5 @@ setup(
     packages=find_packages(where="src"),
     license="",
     package_dir={"": "src"},
-
     install_requires = open("requirements.txt").read().splitlines()
 )

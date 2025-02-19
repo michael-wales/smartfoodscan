@@ -15,10 +15,10 @@ requests
 # File utilities
 pathlib
 
-#Frontend
+# Frontend
 streamlit
 
-#Barcode
+# Barcode
 pyzbar
 opencv-python
 
