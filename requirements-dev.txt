@@ -11,6 +11,7 @@ scikit-learn
 
 # HTTP
 requests
+json
 
 # File utilities
 pathlib
@@ -20,7 +21,6 @@ streamlit
 
 #Barcode
 pyzbar
-opencv-python
 cv2
 
 # Prettify
