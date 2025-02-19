@@ -8,7 +8,6 @@ pandas
 matplotlib
 seaborn
 scikit-learn
-pyzbar
 
 # HTTP
 requests
@@ -17,7 +16,11 @@ json
 # File utilities
 pathlib
 
-#barcode 
+#Frontend
+streamlit
+
+#Barcode
+pyzbar
 cv2
 
 # Prettify
