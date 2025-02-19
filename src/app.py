@@ -1,6 +1,6 @@
 import streamlit as st
-from barcode_decoder.barcode_reader import barcode_reader
-from product_info.api_fetcher import get_product_info
+from barcode_reader import barcode_reader
+from api_fetcher import get_product_info
 
 # App title
 st.title("SmartFoodScan 🛒")

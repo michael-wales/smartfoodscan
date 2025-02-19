@@ -8,6 +8,6 @@ def get_product_info(barcode):
         if data.get("status") == 1:
             return data["product"]
         else:
-            return f"Product not found"
+            return "Product not found"
     else:
         return f"Error connection with the API: {response.status_code}"
