@@ -13,3 +13,6 @@ Thumbs.db  # Windows
 .env
 
 *.egg-info/
+
+# Docker
+docker-compose.override.yml
