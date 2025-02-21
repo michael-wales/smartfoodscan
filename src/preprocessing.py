@@ -1,15 +1,23 @@
 # Some functions for manipulating dataframes
 
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
-from sklearn.exceptions import NotFittedError
+import numpy as np
 import matplotlib.pyplot as plt
+import gc # Garbage collection
+
 import scipy.stats as stats
 from scipy.stats import shapiro
+
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import string
+from transformers import BertTokenizer, BertModel
+
+import torch # Efficiency # Not necessary in production
+
 
 def split_dataframe(df, columns_to_split):
     '''
@@ -17,7 +25,7 @@ def split_dataframe(df, columns_to_split):
     - One containing the specified columns
     - One containing the remaining columns
 
-    Args:
+    Params:
         df (pd.DataFrame): The original DataFrame.
         columns_to_split (str or list): The column(s) to separate from the original DataFrame.
 
@@ -43,14 +51,13 @@ def scale_dataframe(df, scaler_choice='standard', fitted_scaler=None):
     Scales a dataframe using a specified scaler. If the scaler is already fitted, it will use that.
     If the scaler is not fitted, it will fit and return the fitted scaler.
 
-    Parameters:
-    - df: The dataframe to scale.
-    - scaler_choice: The type of scaler to use. Choices are 'standard', 'minmax', or 'robust'. Default is 'standard'.
-    - fitted_scaler: An optional pre-fitted scaler. If provided, it will scale using this scaler. Default is None.
+    Params:
+        df: The dataframe to scale.
+        scaler_choice: The type of scaler to use. Choices are 'standard', 'minmax', or 'robust'. Default is 'standard'.
+        fitted_scaler: An optional pre-fitted scaler. If provided, it will scale using this scaler. Default is None.
 
     Returns:
-    - Scaled dataframe.
-    - Fitted scaler if it was fitted in the process.
+        tuple: (Scaled DataFrame, fitted scaler)
     '''
 
     # Identify numerical columns
@@ -62,7 +69,7 @@ def scale_dataframe(df, scaler_choice='standard', fitted_scaler=None):
 
     # Initialize the scaler based on user choice, unless a fitted_scaler is provided
     if fitted_scaler is not None:
-        print("Using provided fitted scaler")
+        print('Fitting using fitted scaler.')
         scaler = fitted_scaler
     else:
         # If no fitted_scaler, initialize based on user choice
@@ -101,6 +108,16 @@ def scale_dataframe(df, scaler_choice='standard', fitted_scaler=None):
 
 
 def visualize_columns(df):
+    '''
+    Visualizes normality
+
+    Params:
+        df: The dataframe to check.
+
+    Returns:
+        None
+    '''
+
     # Histograms
     df.hist(bins=30, figsize=(10, 8))
     plt.tight_layout()
@@ -139,16 +156,16 @@ def scale_train_test_data(df, test_size=0.2, scaler_choice='standard', fitted_sc
     Scales the training and test datasets separately using a specified scaler.
     The scaler is fit to the training data and then used to transform both training and test datasets.
 
-    Parameters:
-    - df: The dataframe to split and scale.
-    - test_size: The fraction of the dataset to be used for testing. Default is 0.2 (80% training, 20% test).
-    - scaler_choice: The type of scaler to use. Choices are 'standard', 'minmax', or 'robust'. Default is 'standard'.
-    - fitted_scaler: An optional pre-fitted scaler. If provided, it will be used to transform the data. Default is None.
+    Params:
+        df (pd.Dataframe): The dataframe to split and scale.
+        test_size (float): The fraction of the dataset to be used for testing. Default is 0.2 (80% training, 20% test).
+        scaler_choice (str): The type of scaler to use. Choices are 'standard', 'minmax', or 'robust'. Default is 'standard'.
+        fitted_scaler: An optional pre-fitted scaler. If provided, it will be used to transform the data. Default is None.
 
     Returns:
-    - scaled_train_df: Scaled training dataframe.
-    - scaled_test_df: Scaled test dataframe.
-    - fitted_scaler: The fitted scaler used to transform the data.
+        pd.DataFrame: Scaled training dataframe.
+        pd.DataFrame: Scaled test dataframe.
+        scaler object: The fitted scaler used to transform the data.
     '''
 
     # Split the dataframe into train and test sets
@@ -166,6 +183,19 @@ def scale_train_test_data(df, test_size=0.2, scaler_choice='standard', fitted_sc
 
 
 def use_pca(df, n=5, fitted_pca=None):
+    '''
+    Reduce dimensionality
+
+    Args:
+        df (pd.DataFrame)
+        n (int): n_components
+        fitted_pca (PCA object): optional PCA for fitting
+
+    Returns:
+        pd.DataFrame: Fitted and transformed DataFrame
+        Fitted PCA object
+    '''
+
     # PCA for Dimensionality Reduction
     if fitted_pca is None:
         pca = PCA(n_components=n)  # Reduce to n components
@@ -176,6 +206,16 @@ def use_pca(df, n=5, fitted_pca=None):
 
 
 def outlier_detection_and_removal(df):
+    '''
+    Removes outliers
+
+    Args:
+        df (pd.DataFrame)
+
+    Returns:
+        pd.DataFrame: Q1 - 1.5IQR <= df <= Q3 + 1.5IQR
+    '''
+
     # IQR Method
     Q1 = df.quantile(0.25)
     Q3 = df.quantile(0.75)
@@ -184,4 +224,112 @@ def outlier_detection_and_removal(df):
     return df_no_outliers
 
 
-# Text Vectorization
+# Text vectorization
+def clean_text_vectorized(df, column_name):
+    '''
+    Cleans annoying text
+
+    Args:
+        df (pd.DataFrame): The DataFrame to clean.
+        column_name (str): The column to clean.
+
+    Returns:
+        pd.DataFrame: The cleaned DataFrame.
+    '''
+    # Avoid pointer errors
+    df = df.copy()
+
+    df[column_name] = df[column_name].str.replace(r'\([^)]+\)|\[[^]]+\]|\{[^}]+\}', '', regex=True)
+    df[column_name] = df[column_name].str.strip()
+    df[column_name] = df[column_name].str.replace(', and', ', ', regex=False).str.replace('.', ',', regex=False)
+    df[column_name] = df[column_name].str.replace(r'([^,]+)\s(E\d+)', r'\1, \2', regex=True)
+    df[column_name] = df[column_name].str.lower()
+
+    return df
+
+# Helper function to process data in chunks # In the end, it's not necessary
+def process_in_chunks(df, column_name, chunk_size=10_000, method='bow', max_features=5_000, use_bert=False):
+    '''
+    Processes a large DataFrame in chunks to avoid memory overload.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame containing the text column.
+        column_name (str): Column name to be used for text data.
+        chunk_size (int): Number of rows per chunk for processing.
+        method (str): Vectorization method: 'bow', 'tfidf', 'bert'.
+        max_features (int): Maximum number of features for BoW and TF-IDF (default: 5_000).
+        use_bert (bool): If True, uses BERT embeddings for vectorization (default: False).
+
+    Returns:
+        pd.DataFrame: DataFrame with the transformed text data (in chunks).
+    '''
+    df = df.copy()
+
+    all_vectors = []
+
+    # Process data in chunks
+    for start_idx in range(0, len(df), chunk_size):
+        end_idx = min(start_idx + chunk_size, len(df))
+        chunk = df.iloc[start_idx:end_idx]
+        chunk_vectors = vectorize_text(chunk, column_name, method, max_features, use_bert)
+        all_vectors.append(chunk_vectors)
+
+        # Clean up memory
+        del chunk, chunk_vectors
+        gc.collect()
+
+    # Concatenate all chunks into a single DataFrame
+    return pd.concat(all_vectors, axis=0)
+
+def vectorize_text(df, column_name='text', method='bow', max_features=5_000):
+    '''
+    Vectorizes text data using various methods.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame containing the text column.
+        column_name (str): Column name to be used for text data (default: 'text').
+        method (str): Vectorization method: 'bow', 'tfidf', or 'bert'.
+        max_features (int): Maximum number of features for BoW and TF-IDF (default: 5_000).
+
+    Returns:
+        pd.DataFrame: DataFrame with the transformed text data.
+        vectorizer if method != 'bert'
+    '''
+
+    df = df.copy()
+
+    # Select the text column
+    text_data = df[column_name].fillna('')
+
+    # Bag of Words (BoW)
+    if method == 'bow':
+        vectorizer = CountVectorizer(max_features=max_features)
+        vectors = vectorizer.fit_transform(text_data)
+        vectorized_df = pd.DataFrame.sparse.from_spmatrix(vectors, columns=vectorizer.get_feature_names_out())
+
+    # TF-IDF
+    elif method == 'tfidf':
+        vectorizer = TfidfVectorizer(max_features=max_features)
+        vectors = vectorizer.fit_transform(text_data)
+        vectorized_df = pd.DataFrame.sparse.from_spmatrix(vectors, columns=vectorizer.get_feature_names_out())
+
+    # BERT
+    elif method == 'bert':
+        bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased') # For English
+        bert_model = BertModel.from_pretrained('bert-base-uncased')
+
+        # Extract BERT embeddings for each document
+        embeddings = []
+        for text in text_data:
+            inputs = bert_tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=512)
+            with torch.no_grad():
+                outputs = bert_model(**inputs)
+                # Use the embeddings from the [CLS] token
+                cls_embedding = outputs.last_hidden_state[:, 0, :].numpy()
+                embeddings.append(cls_embedding.flatten())
+        vectorized_df = pd.DataFrame(np.array(embeddings))
+
+    else:
+        raise ValueError('Invalid method. Choose from "bow", "tfidf", or "bert".')
+
+    return vectorized_df if method == 'bert' else (vectorized_df, vectorizer)
