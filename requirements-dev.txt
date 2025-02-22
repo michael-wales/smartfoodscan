@@ -11,7 +11,6 @@ scikit-learn
 
 # HTTP
 requests
-json
 
 # File utilities
 pathlib
@@ -21,7 +20,7 @@ streamlit
 
 #Barcode
 pyzbar
-cv2
+opencv-python
 
 # Prettify
 tabulate
