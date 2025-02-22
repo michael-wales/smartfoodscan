@@ -23,30 +23,36 @@ if image:
         product_info = get_product_info(barcode)
 
         if product_info:
-            #Display product info
+            # Display basic product info
             name = product_info.get('product_name', 'Unknown')
             brand = product_info.get('brands', 'Unknown').split(',')[0]
             ingredients = product_info.get('ingredients_text', 'Unknown')
-            st.subheader("Product Information")
-            st.write(f"**Name:** {name}")
-            st.write(f"**Brand:** {brand}")
-            st.write(f"**Ingredients:** {ingredients}")
+            st.subheader("Product Name")
+            st.write(f"{name.title()}")
+            st.subheader("Product Brand")
+            st.write(f"{brand.title()}")
+            st.subheader("Product Ingredients")
+            st.write(f"{ingredients.title()}")
 
             # Display image if available
             if "image_url" in product_info:
-                st.image(product_info["image_url"], caption="Product Image")
+                st.subheader("Product Image")
+                st.image(product_info.get("image_url", None), caption="")
 
-            # Check for allergy suitability
-            allergens = product_info.get("allergens_from_ingredients", "").lower()
-            #st.write(f"**Allergens:** {allergens}")
-            common_allergens = ["gluten", "almond", "lactose", "egg"]
-            unsuitable = [a for a in common_allergens if a in allergens]
-
-            if unsuitable:
-                st.error(f"⚠️ Not suitable for: {', '.join(unsuitable)}")
-
+            # Check for allergens and siplay results
+            st.subheader("Allergens")
+            allergens = product_info.get("allergens_tags", None)
+            common_allergens = ['milk','peanuts','fish','soybeans','gluten','molluscs','nuts','eggs','sesame-seeds']
+            if allergens:
+                allergens = allergens[0]
+                unsuitable = [a for a in common_allergens if a in allergens]
+                suitable = [a for a in common_allergens if a not in allergens]
+                if suitable:
+                    st.success(f"✅ Suitable for: {', '.join(suitable)}")
+                if unsuitable:
+                    st.error(f"⚠️ Not suitable for: {', '.join(unsuitable)}")
             else:
-                st.success("✅ Suitable for common allergies!")
+                st.success(f"✅ Suitable for: {', '.join(common_allergens)}")
         else:
             st.error("Product not found in OpenFoodFacts database.")
     else:
