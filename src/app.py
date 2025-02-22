@@ -28,7 +28,7 @@ if image:
         #Fetch product info from Open Food Facts API
         product_info = get_product_info(barcode)
 
-        if product_info:
+        if isinstance(product_info, dict):
             # Display basic product info
             name = product_info.get('product_name', 'Unknown')
             brand = product_info.get('brands', 'Unknown').split(',')[0]
@@ -106,6 +106,6 @@ if image:
             #########
 
         else:
-            st.error("Product not found in OpenFoodFacts database.")
+            st.error(product_info)
     else:
         st.error("Could not detect a barcode. Try another image.")
