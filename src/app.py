@@ -4,7 +4,24 @@ from product_info.api_fetcher import get_product_info
 import pandas as pd
 import joblib
 
-
+# A little CSS code to make streamlit less ugly
+hide_header_footer = """
+                <style>
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+st.markdown(hide_header_footer, unsafe_allow_html=True)
 
 model = joblib.load('models/vanilla_random_forest.pkl')
 
