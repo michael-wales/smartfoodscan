@@ -3,13 +3,22 @@ from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 import pandas as pd
 import joblib
-
+from PIL import Image
 
 
 model = joblib.load('models/vanilla_random_forest.pkl')
 
 # App title
-st.title("SmartFoodScan 🛒")
+#st.title("SmartFoodScan 🛒")
+logo = Image.open('images/logo1.png')
+st.image(logo, caption='', use_container_width=True)
+
+#header
+#st.header("Discover an easier way to make healthier food choices with SmartFoodScan.")
+# Center the text using markdown and HTML
+st.markdown("<h2 style='text-align: center;'>Discover an easier way to make healthier food choices with SmartFoodScan.</h2>", unsafe_allow_html=True)
+
+
 
 # User Input
 # 📷 Priority: camara
