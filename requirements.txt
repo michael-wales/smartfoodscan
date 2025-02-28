@@ -1,35 +1,11 @@
-# Minimal requirements
-pytest
-pylint
-ipdb
-jupyterlab
-numpy
-pandas
-matplotlib
-seaborn
-scikit-learn
+fastapi
 
-# HTTP
-requests
-
-# File utilities
-pathlib
-
-#Frontend
 streamlit
 
-#Barcode
+pandas
+
+requests
+
 pyzbar
+
 opencv-python-headless
-
-# Prettify
-tabulate
-
-# Jupyter
-nbdime
-
-# Setup
-setuptools
-
-# models
-joblib
