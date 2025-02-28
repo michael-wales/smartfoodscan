@@ -35,7 +35,15 @@ nbdime
 setuptools
 
 # BERT
+torch
 transformers
+
+# Trick to install the version of Tensorflow depending on processor: darwin == Mac, ARM == M1
+tensorflow-macos==2.10.0; sys_platform == 'darwin' and 'ARM' in platform_version # Mac M-chips
+tensorflow==2.10.0; sys_platform == 'darwin' and 'ARM' not in platform_version # Mac Intel chips
+tensorflow==2.10.0; sys_platform != 'darwin' # Windows & Ubuntu Intel chips
+
+# I realize that this has all been moved to requirements.txt. We will therefore have to update requirements when merging the pull request. However, in production, we should limit the number of packages used to save loading costs.
 
 # Model
 xgboost
