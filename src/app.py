@@ -48,14 +48,14 @@ st.markdown("<h2 style='text-align: center;'>Discover an easier way to make heal
 
 
 # App title and sidebar
-#st.title("SmartFoodScan 🛒")
 st.sidebar.title("Options")
 st.sidebar.write("Customize your experience:")
 #>>>>>>> origin
 
 
 # User Input
-image = st.camera_input("Take a picture of the product barcode 📷")
+image = st.camera_input(" ")
+#Take a picture of the product barcode 📷
 if not image:
     image = st.file_uploader("Or upload a barcode image from your device 📁", type=["png", "jpg", "jpeg"])
 
