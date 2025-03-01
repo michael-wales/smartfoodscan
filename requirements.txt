@@ -33,3 +33,7 @@ setuptools
 
 # models
 joblib
+
+#openaicall
+openai
+BeautifulSoup
