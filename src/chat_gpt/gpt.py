@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 #function to get the response from the model
 def get_gpt_response(barcode):
     # Set your OpenAI API key
-    openai.api_key='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'
+    openai.api_key=''
     #openai.api_key = st.secrets["api_key"]
     
     # Get the product information from the OpenFoodFacts API
