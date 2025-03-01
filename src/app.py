@@ -179,7 +179,7 @@ if image:
 
                 elif option == "📁 Upload nutritional facts image from device":
                     st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
-                    image = st.file_uploader("", type=["png", "jpg", "jpeg"])
+                    image = st.file_uploader("", type=["png", "jpg", "jpeg"], key= "nutritional-upload")
                     st.markdown('</div>', unsafe_allow_html=True)
 
 
