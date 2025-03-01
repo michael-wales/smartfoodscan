@@ -3,6 +3,7 @@ from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 import pandas as pd
 import joblib
+from chat_gpt.gpt import get_gpt_response
 
 from PIL import Image
 
@@ -44,7 +45,7 @@ st.image(logo, caption='', use_container_width=True)
 #header
 #st.header("Discover an easier way to make healthier food choices with SmartFoodScan.")
 # Center the text using markdown and HTML
-st.markdown("<h2 style='text-align: center;'>Discover an easier way to make healthier food choices with SmartFoodScan.</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'>Discover an easier way to make healthier food choices with SmartFood.</h2>", unsafe_allow_html=True)
 
 
 # App title and sidebar
@@ -56,6 +57,7 @@ st.sidebar.write("Customize your experience:")
 # User Input
 image = st.camera_input(" ")
 #Take a picture of the product barcode 📷
+
 if not image:
     image = st.file_uploader("Or upload a barcode image from your device 📁", type=["png", "jpg", "jpeg"])
 
@@ -151,5 +153,16 @@ if image:
             # This whole thing needs to be reworked. The machine learning model really doesn't tell us anything. We can just use the API and describe the ingredients and their effect since the 'y' is just a linear combination of them.
         else:
             st.error("Failed to fetch product information. Please try again.")
+            
+        #insights about the product using GPT-4
+        st.markdown("<h3 style='text-align: center;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
+        st.write(get_gpt_response(barcode))        
+            
+            
     else:
         st.error("Could not detect a barcode. Try another image.")
+
+
+
+
+
