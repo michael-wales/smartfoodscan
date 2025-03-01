@@ -114,12 +114,12 @@ if image:
 
             url = 'https://smartfoodscan-805490564375.europe-west1.run.app/predict'
 
-            response = requests.post(url=url, json=data)
+            response = requests.get(url=url, params=data).json()
 
-            st.write(response.json())
+            st.write(response)
             ### These numbers are still skewed ###
 
-            # Display healthiness score with a progress bar
+            Display healthiness score with a progress bar
             score_value = max(0, min(response[0], 100))
             score_value = 100 - score_value  # Invert the score
             st.progress(score_value / 100)
