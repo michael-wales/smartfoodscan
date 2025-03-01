@@ -3,6 +3,9 @@ from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 import pandas as pd
 import joblib
+
+from PIL import Image
+
 import time
 
 # A little CSS code to make streamlit less ugly
@@ -23,6 +26,7 @@ hide_header_footer = """
                 </style>
                 """
 st.markdown(hide_header_footer, unsafe_allow_html=True)
+#>>>>>>> origin
 
 # Load the machine learning model with caching
 @st.cache_data
@@ -31,14 +35,27 @@ def load_model():
 
 model = load_model()
 
+
+# App title
+#st.title("SmartFoodScan 🛒")
+logo = Image.open('images/logo1.png')
+st.image(logo, caption='', use_container_width=True)
+
+#header
+#st.header("Discover an easier way to make healthier food choices with SmartFoodScan.")
+# Center the text using markdown and HTML
+st.markdown("<h2 style='text-align: center;'>Discover an easier way to make healthier food choices with SmartFoodScan.</h2>", unsafe_allow_html=True)
+
+
 # App title and sidebar
-st.title("SmartFoodScan 🛒")
 st.sidebar.title("Options")
 st.sidebar.write("Customize your experience:")
+#>>>>>>> origin
 
 
 # User Input
-image = st.camera_input("Take a picture of the product barcode 📷")
+image = st.camera_input(" ")
+#Take a picture of the product barcode 📷
 if not image:
     image = st.file_uploader("Or upload a barcode image from your device 📁", type=["png", "jpg", "jpeg"])
 
