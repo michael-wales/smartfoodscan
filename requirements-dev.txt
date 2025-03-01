@@ -1,0 +1,42 @@
+# Minimal requirements
+pytest
+pylint
+ipdb
+jupyterlab
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+
+# HTTP
+requests
+
+# File utilities
+pathlib
+
+# Frontend
+streamlit
+
+# Barcode
+pyzbar
+opencv-python-headless
+
+# Prettify
+tabulate
+
+# Jupyter
+nbdime
+
+# Setup
+setuptools
+
+# Models
+joblib
+
+# Deployment
+fastapi
+uvicorn
+
+#.env
+python-dotenv
