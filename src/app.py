@@ -1,6 +1,8 @@
 import streamlit as st
 from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
+from dietary_analysis.allergens import identify_allergens
+from dietary_analysis.labels import check_labels
 import pandas as pd
 import joblib
 
@@ -9,8 +11,10 @@ from PIL import Image
 import time
 
 # A little CSS code to make streamlit less ugly
-hide_header_footer = """
+style = """
                 <style>
+                @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
+
                 #MainMenu {
                 visibility: hidden;
                 height: 0%;
@@ -23,9 +27,18 @@ hide_header_footer = """
                 visibility: hidden;
                 height: 0%;
                 }
+                html {
+                filter: none;
+                }
+                .stRadio {
+                display: flex;
+                justify-content: center;
+                margin-bottom: -100px;
+                }
                 </style>
                 """
-st.markdown(hide_header_footer, unsafe_allow_html=True)
+
+st.markdown(style, unsafe_allow_html=True)
 #>>>>>>> origin
 
 # Load the machine learning model with caching
@@ -35,30 +48,33 @@ def load_model():
 
 model = load_model()
 
-
-# App title
-#st.title("SmartFoodScan 🛒")
+#App logo and catch sentence
 logo = Image.open('images/logo1.png')
 st.image(logo, caption='', use_container_width=True)
-
-#header
-#st.header("Discover an easier way to make healthier food choices with SmartFoodScan.")
-# Center the text using markdown and HTML
-st.markdown("<h2 style='text-align: center;'>Discover an easier way to make healthier food choices with SmartFoodScan.</h2>", unsafe_allow_html=True)
-
+st.markdown("<h2 style='text-align: center; font-size: 50px; margin-top: -70px;font-family: 'Quicksand', sans-serif;'>Discover an easier way to make healthier food choices</h2>", unsafe_allow_html=True)
 
 # App title and sidebar
-st.sidebar.title("Options")
-st.sidebar.write("Customize your experience:")
-#>>>>>>> origin
+# st.sidebar.title("Options")
+# st.sidebar.write("Customize your experience:")
+# #>>>>>>> origin
 
 
-# User Input
-image = st.camera_input(" ")
-#Take a picture of the product barcode 📷
-if not image:
-    image = st.file_uploader("Or upload a barcode image from your device 📁", type=["png", "jpg", "jpeg"])
+# User input (removed after product identified)
+input_placeholder = st.empty()
+with input_placeholder.container():
+    st.markdown("<h2 style='text-align: center; font-size: 30px; font-weight: bold; margin-top: 10px; margin-bottom: -70px;'>How would you like to search for a product?</p>", unsafe_allow_html=True)
+    option = st.radio("", ["📸 Take a picture of barcode", "📁 Upload barcode image from device"], horizontal=True,key="search_option")
 
+    if option == "📸 Take a picture of barcode":
+        st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
+        camera_image = st.camera_input("")
+        st.markdown('</div>', unsafe_allow_html=True)
+        image = camera_image
+
+    elif option == "📁 Upload barcode image from device":
+        st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
+        image = st.file_uploader("", type=["png", "jpg", "jpeg"])
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Barcode reader and product info fetching
 if image:
@@ -66,40 +82,44 @@ if image:
         barcode = barcode_reader(image)
 
     if barcode:
-        st.success(f"Product barcode: {barcode}")
+        input_placeholder.empty()
         with st.spinner("Fetching product info..."):
             product_info = get_product_info(barcode)
 
         if isinstance(product_info, dict):
             # Display basic product info
-            st.subheader("Product Information")
+            st.subheader("📦 Product Information")
             col1, col2 = st.columns(2)
             with col1:
                 st.write(f"**Name:** {product_info.get('product_name', 'Unknown').title()}")
+                st.write(f"**Barcode**: {barcode}")
                 st.write(f"**Brand:** {product_info.get('brands', 'Unknown').split(',')[0].title()}")
+                ingredients = product_info.get('ingredients_text', 'No ingredients listed.')
+                st.write(f"**Ingredients:** {ingredients.title()}")
             with col2:
                 if "image_url" in product_info:
                     st.image(product_info["image_url"], caption="Product Image", width=150)
 
-            # Display ingredients
-            st.subheader("Ingredients")
-            ingredients = product_info.get('ingredients_text', 'No ingredients listed.')
-            st.write(ingredients.title())
-
-            # Check for allergens
+            # Display allergens and tags
             st.subheader("⚠️ Allergens")
-            allergens = product_info.get("allergens_tags", [])
-            common_allergens = ['milk', 'peanuts', 'fish', 'soybeans', 'gluten', 'molluscs', 'nuts', 'eggs', 'sesame-seeds']
-            if allergens:
-                allergens = allergens[0]
-                unsuitable = [a for a in common_allergens if a in allergens]
-                suitable = [a for a in common_allergens if a not in allergens]
-                if suitable:
-                    st.success(f"✅ Suitable for: {', '.join(suitable)}")
-                if unsuitable:
-                    st.error(f"🚫 Not suitable for: {', '.join(unsuitable)}")
-            else:
-                st.success(f"✅ Suitable for: {', '.join(common_allergens)}")
+
+            suitable_allergens, unsuitable_allergens = identify_allergens(product_info)
+            if suitable_allergens:
+                st.success(f"✅ Suitable for: {', '.join(suitable_allergens)}")
+            if unsuitable_allergens:
+                st.error(f"🚫 Not suitable for: {', '.join(unsuitable_allergens)}")
+
+            labels = check_labels(product_info)
+            cols = st.columns(len(labels))
+            for i, (label, label_value) in enumerate(labels.items()):
+                if label_value is not None:
+                    with cols[i]:
+                        if label_value == 'yes':
+                            st.image(f"images/{label}_yes.png", width=100)  # Adjust the width for larger images
+                        elif label_value == 'no':
+                            st.image(f"images/{label}_no.png", width=100)
+                        elif label_value == 'maybe':
+                            st.image(f"images/{label}_maybe.png", width=100)
 
             # Nutritional information visualization
             st.subheader("Nutritional Information")
