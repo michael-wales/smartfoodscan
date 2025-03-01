@@ -19,3 +19,9 @@ scikit-learn
 python-dotenv
 
 joblib
+
+google.cloud.vision
+
+io
+
+re
