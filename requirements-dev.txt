@@ -33,3 +33,7 @@ setuptools
 
 # Deployment
 fastapi
+uvicorn
+
+#.env
+python-dotenv

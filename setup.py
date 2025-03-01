@@ -1,16 +1,14 @@
 from setuptools import setup, find_packages
 
+with open("requirements.txt") as f:
+    content = f.readlines()
+requirements = [x.strip() for x in content if "git+" not in x]
+
 setup(
     name="smartfoodscan",
     version="0.1.0",
-    description="",
-    long_description=open("README.md").read(),
-    author="",
-    author_email="",
-    url="",
     packages=find_packages(where="src"),
-    license="",
     package_dir={"": "src"},
 
-    install_requires = open("requirements.txt").read().splitlines()
+    install_requires = requirements
 )

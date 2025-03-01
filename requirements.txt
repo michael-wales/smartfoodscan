@@ -9,3 +9,11 @@ requests
 pyzbar
 
 opencv-python-headless
+
+fastapi
+
+uvicorn
+
+scikit-learn
+
+python-dotenv

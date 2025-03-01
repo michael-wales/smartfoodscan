@@ -2,7 +2,7 @@ import streamlit as st
 from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 import pandas as pd
-from api_file import predict
+import requests
 
 ### There's way too much in here. Let's import code instead. ###
 
@@ -95,26 +95,31 @@ if image:
             # Healthiness score prediction
             st.subheader("🏥 Healthiness Score")
             data = {
-                'energy-kcal_100g': [nutriments.get('energy-kcal_100g', 0)],
-                'saturated-fat_100g': [nutriments.get('saturated-fat_100g', 0)],
-                'trans-fat_100g': [nutriments.get('trans-fat_100g', 0)],
-                'cholesterol_100g': [nutriments.get('cholesterol_100g', 0)],
-                'sugars_100g': [nutriments.get('sugars_100g', 0)],
-                'fiber_100g': [nutriments.get('fiber_100g', 0)],
-                'proteins_100g': [nutriments.get('proteins_100g', 0)],
-                'sodium_100g': [nutriments.get('sodium_100g', 0)],
-                'calcium_100g': [nutriments.get('calcium_100g', 0)],
-                'iron_100g': [nutriments.get('iron_100g', 0)],
-                'other_carbohydrates_100g': [nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0)],
-                'other_fat_100g': [nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)],
+                'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
+                'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
+                'trans-fat_100g': nutriments.get('trans-fat_100g', 0),
+                'cholesterol_100g': nutriments.get('cholesterol_100g', 0),
+                'sugars_100g': nutriments.get('sugars_100g', 0),
+                'fiber_100g': nutriments.get('fiber_100g', 0),
+                'proteins_100g': nutriments.get('proteins_100g', 0),
+                'sodium_100g': nutriments.get('sodium_100g', 0),
+                'calcium_100g': nutriments.get('calcium_100g', 0),
+                'iron_100g': nutriments.get('iron_100g', 0),
+                'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
+                'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0),
             }
-            input_data = pd.DataFrame.from_dict(data)
-            prediction = predict(input_data)
 
+            url = 'https://smartfoodscan-805490564375.europe-west1.run.app/predict'
+
+            params = {'input': data}
+
+            response = requests.get(url=url, params=params).json()
+
+            st.write(response)
             ### These numbers are still skewed ###
 
             # Display healthiness score with a progress bar
-            score_value = max(0, min(prediction[0], 100))
+            score_value = max(0, min(response[0], 100))
             score_value = 100 - score_value  # Invert the score
             st.progress(score_value / 100)
             if score_value < 33.33:
