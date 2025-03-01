@@ -3,6 +3,7 @@ from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
+from nutrition_reader import extract_nutritional_info
 import pandas as pd
 from PIL import Image
 import requests
@@ -163,6 +164,82 @@ if image:
                 st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
             # This whole thing needs to be reworked. The machine learning model really doesn't tell us anything. We can just use the API and describe the ingredients and their effect since the 'y' is just a linear combination of them.
         else:
-            st.error("Failed to fetch product information. Please try again.")
+            st.error("Failed to fetch product information. You can try with an image of the Nutritional Facts.")
+
+            input_placeholder = st.empty()
+            with input_placeholder.container():
+                st.markdown("<h2 style='text-align: center; font-size: 30px; font-weight: bold; margin-top: 10px; margin-bottom: -70px;'>How would you like to search for a product?</p>", unsafe_allow_html=True)
+                option = st.radio("", ["📸 Take a picture of nutritional facts", "📁 Upload nutritional facts image from device"], horizontal=True,key="search_option2")
+
+                if option == "📸 Take a picture of nutritional facts":
+                    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
+                    camera_image = st.camera_input("")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    image = camera_image
+
+                elif option == "📁 Upload nutritional facts image from device":
+                    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
+                    image = st.file_uploader("", type=["png", "jpg", "jpeg"])
+                    st.markdown('</div>', unsafe_allow_html=True)
+
+
+            if image:
+                input_placeholder.empty()
+                with st.spinner("Fetching product info..."):
+                    nutriments = extract_nutritional_info(image)
+
+                    if isinstance(nutriments, dict):
+
+                        # Nutritional information visualization
+                        st.subheader("Nutritional Information")
+                        if "nutriments" in nutriments:
+                            nutrients = {
+                                "Energy (kcal)": nutriments.get('energy-kcal_100g', 0),
+                                "Saturated Fat (g)": nutriments.get('saturated-fat_100g', 0),
+                                "Sugars (g)": nutriments.get('sugars_100g', 0),
+                                "Protein (g)": nutriments.get('proteins_100g', 0),
+                                "Fiber (g)": nutriments.get('fiber_100g', 0),
+                                "Sodium (mg)": nutriments.get('sodium_100g', 0),
+                            }
+                            st.bar_chart(nutrients)
+
+                        # Healthiness score prediction
+                        st.subheader("⚕️ Healthiness Score")
+                        data = {
+                            'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
+                            'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
+                            'trans-fat_100g': nutriments.get('trans-fat_100g', 0),
+                            'cholesterol_100g': nutriments.get('cholesterol_100g', 0),
+                            'sugars_100g': nutriments.get('sugars_100g', 0),
+                            'fiber_100g': nutriments.get('fiber_100g', 0),
+                            'proteins_100g': nutriments.get('proteins_100g', 0),
+                            'sodium_100g': nutriments.get('sodium_100g', 0),
+                            'calcium_100g': nutriments.get('calcium_100g', 0),
+                            'iron_100g': nutriments.get('iron_100g', 0),
+                            'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
+                            'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
+                        }
+
+                        url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
+
+                        response = requests.post(url, json=data)
+
+                        prediction = response.json()['prediction']
+
+                        # Display healthiness score with a progress bar
+                        score_value = max(0, min(prediction[0], 100))
+                        score_value = 100 - score_value  # Invert the score
+                        st.progress(score_value / 100)
+                        if score_value < 33.33:
+                            st.error(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
+                        elif score_value < 60:
+                            st.warning(f"Healthiness Score: {score_value:.0f}/100 - Low Healthiness ⚠️")
+                        elif score_value < 80:
+                            st.info(f"Healthiness Score: {score_value:.0f}/100 - Moderately Healthy ✅")
+                        elif score_value < 93.33:
+                            st.success(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
+                        else:
+                            st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
+
     else:
         st.error("Could not detect a barcode. Try another image.")

@@ -2,19 +2,22 @@ from google.cloud import vision
 import pandas as pd
 import io
 import re
+import cv2
+import numpy as np
 
 client = vision.ImageAnnotatorClient()
 
 def extract_text(image):
-    with io.open(image, 'rb') as image_file:
-        content = image_file.read()
+    # with io.open(image, 'rb') as image_file:
+    #     content = image_file.read()
+
+    content = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR).tobytes()
 
     image = vision.Image(content=content)
     response = client.text_detection(image=image)
     texts = response.text_annotations
 
     return texts[0].description if texts else ""
-
 
 features = ['energy-kcal_100g', 'saturated-fat_100g', 'trans-fat_100g', 'cholesterol_100g',
             'sugars_100g', 'fiber_100g', 'proteins_100g', 'sodium_100g', 'calcium_100g',
@@ -23,22 +26,45 @@ features = ['energy-kcal_100g', 'saturated-fat_100g', 'trans-fat_100g', 'cholest
 nutrition_dict = {feature: 0 for feature in features}
 
 key_mapping = {
-    'energy-kcal_100g': 'Calories',
-    'saturated-fat_100g': 'Saturated Fat',
-    'trans-fat_100g': 'Trans Fat',
-    'cholesterol_100g': 'Cholesterol',
-    'sugars_100g': 'Sugars',
-    'fiber_100g': 'Dietary Fiber',
-    'proteins_100g': 'Protein',
-    'sodium_100g': 'Sodium',
-    'calcium_100g': 'Calcium',
-    'iron_100g': 'Iron',
-    'other_carbohydrates_100g': 'Carbohydrate',
-    'fat_100g': 'total Fat',
-    'ingredients': 'ingredients'
+        'energy-kcal_100g': 'Calories',
+        'saturated-fat_100g': 'Saturated Fat',
+        'trans-fat_100g': 'Trans Fat',
+        'cholesterol_100g': 'Cholesterol',
+        'sugars_100g': 'Sugars',
+        'fiber_100g': 'Dietary Fiber',
+        'proteins_100g': 'Protein',
+        'sodium_100g': 'Sodium',
+        'calcium_100g': 'Calcium',
+        'iron_100g': 'Iron',
+        'other_carbohydrates_100g': 'Carbohydrate',
+        'fat_100g': 'total Fat',
+        'ingredients': 'ingredients'
 }
 
+
 def extract_values(nutrition_dict, nutrition_list, key_mapping):
+
+    features = ['energy-kcal_100g', 'saturated-fat_100g', 'trans-fat_100g', 'cholesterol_100g',
+            'sugars_100g', 'fiber_100g', 'proteins_100g', 'sodium_100g', 'calcium_100g',
+            'iron_100g', 'other_carbohydrates_100g', 'fat_100g', 'ingredients']
+
+    nutrition_dict = {feature: 0 for feature in features}
+
+    key_mapping = {
+        'energy-kcal_100g': 'Calories',
+        'saturated-fat_100g': 'Saturated Fat',
+        'trans-fat_100g': 'Trans Fat',
+        'cholesterol_100g': 'Cholesterol',
+        'sugars_100g': 'Sugars',
+        'fiber_100g': 'Dietary Fiber',
+        'proteins_100g': 'Protein',
+        'sodium_100g': 'Sodium',
+        'calcium_100g': 'Calcium',
+        'iron_100g': 'Iron',
+        'other_carbohydrates_100g': 'Carbohydrate',
+        'fat_100g': 'total Fat',
+        'ingredients': 'ingredients'
+    }
 
     for key, search_term in key_mapping.items():
         for i, item in enumerate(nutrition_list):
@@ -112,6 +138,7 @@ def extract_nutritional_info(image):
     text = extract_text(image)
     nutrition_list = text.split("\n")
     nutrition_list = [nutrient for nutrient in nutrition_list if nutrient]
+    nutrition_dict = {feature: 0 for feature in features}
     nutrition_dict = extract_values(nutrition_dict, nutrition_list, key_mapping)
     nutrition_dict = convert_mg_to_g(nutrition_dict)
     serving_size = extract_serving_size(nutrition_list)
