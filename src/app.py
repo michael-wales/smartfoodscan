@@ -95,18 +95,18 @@ if image:
             # Healthiness score prediction
             st.subheader("⚕️ Healthiness Score")
             data = {
-                'energy-kcal_100g': [nutriments.get('energy-kcal_100g', 0)],
-                'saturated-fat_100g': [nutriments.get('saturated-fat_100g', 0)],
-                'trans-fat_100g': [nutriments.get('trans-fat_100g', 0)],
-                'cholesterol_100g': [nutriments.get('cholesterol_100g', 0)],
-                'sugars_100g': [nutriments.get('sugars_100g', 0)],
-                'fiber_100g': [nutriments.get('fiber_100g', 0)],
-                'proteins_100g': [nutriments.get('proteins_100g', 0)],
-                'sodium_100g': [nutriments.get('sodium_100g', 0)],
-                'calcium_100g': [nutriments.get('calcium_100g', 0)],
-                'iron_100g': [nutriments.get('iron_100g', 0)],
-                'other_carbohydrates_100g': [nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0)],
-                'other_fat_100g': [nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)],
+                'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
+                'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
+                'trans-fat_100g': nutriments.get('trans-fat_100g', 0),
+                'cholesterol_100g': nutriments.get('cholesterol_100g', 0),
+                'sugars_100g': nutriments.get('sugars_100g', 0),
+                'fiber_100g': nutriments.get('fiber_100g', 0),
+                'proteins_100g': nutriments.get('proteins_100g', 0),
+                'sodium_100g': nutriments.get('sodium_100g', 0),
+                'calcium_100g': nutriments.get('calcium_100g', 0),
+                'iron_100g': nutriments.get('iron_100g', 0),
+                'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
+                'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
             }
 
             url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
@@ -115,7 +115,7 @@ if image:
 
             print(response.json())
 
-            prediction = response.json()
+            prediction = response.json()['prediction']
 
             # Display healthiness score with a progress bar
             score_value = max(0, min(prediction[0], 100))
