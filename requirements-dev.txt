@@ -31,6 +31,9 @@ nbdime
 # Setup
 setuptools
 
+# Models
+joblib
+
 # Deployment
 fastapi
 uvicorn

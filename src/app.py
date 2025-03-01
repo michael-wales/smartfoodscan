@@ -2,7 +2,6 @@ import streamlit as st
 from barcode_decoder.barcode_reader import barcode_reader
 from product_info.api_fetcher import get_product_info
 import pandas as pd
-import joblib
 import requests
 
 ### There's way too much in here. Let's import code instead. ###
@@ -25,13 +24,6 @@ hide_header_footer = """
                 </style>
                 """
 st.markdown(hide_header_footer, unsafe_allow_html=True)
-
-# Load the machine learning model with caching
-@st.cache_data
-def load_model():
-    return joblib.load('models/vanilla_random_forest.pkl') # Change best_model as needed
-
-model = load_model()
 
 # App title and sidebar
 st.title("SmartFoodScan 🛒")
@@ -116,8 +108,14 @@ if image:
                 'other_carbohydrates_100g': [nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0)],
                 'other_fat_100g': [nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)],
             }
-            input_data = pd.DataFrame.from_dict(data)
-            prediction = model.predict(input_data)
+
+            url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
+
+            response = requests.post(url, json=data)
+
+            print(response.json())
+
+            prediction = response.json()
 
             # Display healthiness score with a progress bar
             score_value = max(0, min(prediction[0], 100))

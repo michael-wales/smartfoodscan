@@ -17,3 +17,5 @@ uvicorn
 scikit-learn
 
 python-dotenv
+
+joblib
