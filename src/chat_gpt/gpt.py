@@ -11,7 +11,7 @@ soup = BeautifulSoup(response.text, 'html.parser')
 text = soup.get_text()
 
 # Set your OpenAI API key
-openai.api_key='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'
+openai.api_key=''
 
 
 
