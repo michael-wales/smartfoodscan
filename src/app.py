@@ -4,11 +4,10 @@ from product_info.api_fetcher import get_product_info
 from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
 import pandas as pd
-import joblib
-
 from PIL import Image
+import requests
 
-import time
+### There's way too much in here. Let's import code instead. ###
 
 # A little CSS code to make streamlit less ugly
 style = """
@@ -39,14 +38,6 @@ style = """
                 """
 
 st.markdown(style, unsafe_allow_html=True)
-#>>>>>>> origin
-
-# Load the machine learning model with caching
-@st.cache_data
-def load_model():
-    return joblib.load('models/vanilla_random_forest.pkl') # Change best_model as needed
-
-model = load_model()
 
 #App logo and catch sentence
 logo = Image.open('images/logo1.png')
@@ -56,8 +47,6 @@ st.markdown("<h2 style='text-align: center; font-size: 50px; margin-top: -70px;f
 # App title and sidebar
 # st.sidebar.title("Options")
 # st.sidebar.write("Customize your experience:")
-# #>>>>>>> origin
-
 
 # User input (removed after product identified)
 input_placeholder = st.empty()
@@ -136,23 +125,27 @@ if image:
                 st.bar_chart(nutrients)
 
             # Healthiness score prediction
-            st.subheader("🏥 Healthiness Score")
+            st.subheader("⚕️ Healthiness Score")
             data = {
-                'energy-kcal_100g': [nutriments.get('energy-kcal_100g', 0)],
-                'saturated-fat_100g': [nutriments.get('saturated-fat_100g', 0)],
-                'trans-fat_100g': [nutriments.get('trans-fat_100g', 0)],
-                'cholesterol_100g': [nutriments.get('cholesterol_100g', 0)],
-                'sugars_100g': [nutriments.get('sugars_100g', 0)],
-                'fiber_100g': [nutriments.get('fiber_100g', 0)],
-                'proteins_100g': [nutriments.get('proteins_100g', 0)],
-                'sodium_100g': [nutriments.get('sodium_100g', 0)],
-                'calcium_100g': [nutriments.get('calcium_100g', 0)],
-                'iron_100g': [nutriments.get('iron_100g', 0)],
-                'other_carbohydrates_100g': [nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0)],
-                'other_fat_100g': [nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)],
+                'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
+                'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
+                'trans-fat_100g': nutriments.get('trans-fat_100g', 0),
+                'cholesterol_100g': nutriments.get('cholesterol_100g', 0),
+                'sugars_100g': nutriments.get('sugars_100g', 0),
+                'fiber_100g': nutriments.get('fiber_100g', 0),
+                'proteins_100g': nutriments.get('proteins_100g', 0),
+                'sodium_100g': nutriments.get('sodium_100g', 0),
+                'calcium_100g': nutriments.get('calcium_100g', 0),
+                'iron_100g': nutriments.get('iron_100g', 0),
+                'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
+                'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
             }
-            input_data = pd.DataFrame.from_dict(data)
-            prediction = model.predict(input_data)
+
+            url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
+
+            response = requests.post(url, json=data)
+
+            prediction = response.json()['prediction']
 
             # Display healthiness score with a progress bar
             score_value = max(0, min(prediction[0], 100))
