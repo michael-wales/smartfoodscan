@@ -5,8 +5,8 @@ import re
 
 client = vision.ImageAnnotatorClient()
 
-def extract_text(image_path):
-    with io.open(image_path, 'rb') as image_file:
+def extract_text(image):
+    with io.open(image, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -108,8 +108,8 @@ def convert_to_100g(nutrition_dict, serving_size):
 
     return nutrition_100g
 
-def extract_nutritional_info(image_path):
-    text = extract_text(image_path)
+def extract_nutritional_info(image):
+    text = extract_text(image)
     nutrition_list = text.split("\n")
     nutrition_list = [nutrient for nutrient in nutrition_list if nutrient]
     nutrition_dict = extract_values(nutrition_dict, nutrition_list, key_mapping)
