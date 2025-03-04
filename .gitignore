@@ -13,3 +13,7 @@ Thumbs.db  # Windows
 .env
 
 *.egg-info/
+
+# Large files
+*.joblib
+*.pkl
