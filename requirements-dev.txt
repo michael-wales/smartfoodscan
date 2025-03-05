@@ -41,6 +41,9 @@ uvicorn
 #.env
 python-dotenv
 
+google.cloud.vision
+
 # OpenAI
 BeautifulSoup4
 openai==0.28
+
