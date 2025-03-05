@@ -1,22 +1,29 @@
-import re
-def identify_allergens(ingredients):
-    allergen_list = {
-        "Wheat": ["wheat", "spelt", "durum", "semolina", "farro"],
-        "Milk": ["whey","casein","lactose","milk", "cream", "butter", "cheese", "yogurt"],
-        "Egg": ["egg", "ovalbumin", "albumin"],
-        "Peanuts": ["peanut","groundnuts"],
-        "Soy": ["soy", "soybean", "tofu", "miso", "tempeh"],
-        "Fish": ["salmon", "tuna", "cod", "haddock", "anchovy","halibut","mackarel","bass","sardines","trout","snapper","sole"],
-        "Shellfish": ["shrimp", "crab", "lobster", "prawn", "scallop","clams","oyster","squid","octopus","crawfish","mussels"],
-        "Tree nuts": ["walnut", "cashew", "pecan", "hazelnut", "pistachio"],
-        "Sesame": ["sesame", "tahini"],
-        }
+def identify_allergens(product_info):
+    allergen_emojis = {
+        'milk': '🥛',
+        'peanuts': '🥜',
+        'fish': '🐟',
+        'soybeans': '🌱',
+        'gluten': '🍞',
+        'molluscs': '🐚',
+        'nuts': '🌰',
+        'eggs': '🥚',
+        'sesame-seeds': '🍥',
 
-    found_allergens = {}
-    ingredients = [i.lower().strip() for i in ingredients]
+    }
+    allergens = product_info.get("allergens_tags", [])
+    common_allergens = ['milk', 'peanuts', 'fish', 'soybeans', 'gluten', 'molluscs', 'nuts', 'eggs', 'sesame-seeds']
 
-    for allergen, keywords in allergen_list.items():
-        matches = [item for item in ingredients if any(re.search(rf"\b{kw}\b", item, re.IGNORECASE) for kw in keywords)]
-        found_allergens[allergen] = "Contains" if matches else "Free"
+    if allergens:
+        allergens = allergens[0]
 
-    return found_allergens
+        unsuitable = [a for a in common_allergens if a in allergens]
+        suitable = [a for a in common_allergens if a not in allergens]
+
+        suitable_allergens = [f"{allergen_emojis.get(a, '')} {a.title()}" for a in suitable]
+        unsuitable_allergens = [f"{allergen_emojis.get(a, '')} {a.title()}" for a in unsuitable]
+        return suitable_allergens, unsuitable_allergens
+
+    else:
+        suitable_allergens = [f"{allergen_emojis.get(a, '')} {a.title()}" for a in common_allergens]
+        return suitable_allergens, []
