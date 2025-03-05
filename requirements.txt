@@ -20,8 +20,8 @@ python-dotenv
 
 joblib
 
+openai==0.28
 
-openai
-BeautifulSoup
+BeautifulSoup4
 
 google.cloud.vision
