@@ -40,3 +40,7 @@ uvicorn
 
 #.env
 python-dotenv
+
+# OpenAI
+BeautifulSoup4
+openai==0.28
