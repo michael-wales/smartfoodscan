@@ -5,6 +5,8 @@ from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
 from nutrition_reader import extract_nutritional_info
 import pandas as pd
+import joblib
+from chat_gpt.gpt import get_gpt_response
 from PIL import Image
 import requests
 
@@ -162,6 +164,8 @@ if image:
                 st.success(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
             else:
                 st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
+            st.markdown("<h3 style='text-align: center;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
+            st.write(get_gpt_response(barcode))  
             # This whole thing needs to be reworked. The machine learning model really doesn't tell us anything. We can just use the API and describe the ingredients and their effect since the 'y' is just a linear combination of them.
         else:
             st.error("Failed to fetch product information. You can try with an image of the Nutritional Facts.")
@@ -240,6 +244,10 @@ if image:
                             st.success(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
                         else:
                             st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
-
     else:
         st.error("Could not detect a barcode. Try another image.")
+
+
+
+
+

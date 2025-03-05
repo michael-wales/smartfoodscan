@@ -20,4 +20,8 @@ python-dotenv
 
 joblib
 
+
+openai
+BeautifulSoup
+
 google.cloud.vision
