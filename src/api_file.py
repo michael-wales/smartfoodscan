@@ -6,7 +6,7 @@ import pandas as pd
 app = FastAPI()
 
 # Load the model once at startup to avoid reloading on every request
-with open('../models/best_model.pkl', 'rb') as file:
+with open('../models/best_model.joblib', 'rb') as file:
     model = joblib.load(file)
 
 # Define the expected JSON format using Pydantic
