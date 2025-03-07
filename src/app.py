@@ -151,7 +151,7 @@ if image:
                 'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0),
                 'text': text
                 }
-            print(data)
+
             url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
 
             response = requests.post(url, json=data)
