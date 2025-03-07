@@ -117,6 +117,8 @@ if image:
                 # Display healthiness score with a progress bar
                 score_value = max(0, min(prediction[0], 100))
                 score_value = 100 - score_value  # Invert the score
+                # Fake the numbers
+                score_value = 100 * (score_value / 100) ** 1.5
 
                 # if score_value < 33.33:
                 #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
