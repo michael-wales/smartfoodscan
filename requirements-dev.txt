@@ -46,3 +46,4 @@ openai==0.28
 BeautifulSoup4
 
 google.cloud.vision
+plotly
