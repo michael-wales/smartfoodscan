@@ -146,20 +146,19 @@ if image:
                 st.markdown('<style>div.row-widget.stPlotlyChart {margin-top: -200px;}</style>', unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True)
 
-            go_back = st.button("🔄 Scan Another Product")
-            if go_back:
+
+            if st.button("🔄 Scan Another Product"):
                 st.session_state.product_info = None
+                st.session_state.barcode = None
                 st.experimental_rerun()
+
             with col2:
                 #Chat GPT details
                 chatgpt_response = get_gpt_response(barcode)
                 if chatgpt_response:
                     st.markdown("<h3 style='text-align: center;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
                     st.write(chatgpt_response)
-        go_back = st.button("🔄 Scan Another Product")
-        if go_back:
-            st.session_state.product_info = None
-            st.experimental_rerun()
+
 
 
 
