@@ -4,15 +4,21 @@ from product_info.api_fetcher import get_product_info
 from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
 from nutrition_reader import extract_nutritional_info
-import pandas as pd
-import joblib
 from chat_gpt.gpt import get_gpt_response
 from PIL import Image
 import requests
 import plotly.graph_objects as go
 
-
-
+st.markdown(
+    """
+    <style>
+        .block-container {
+            max-width: 60%;  /* Increase content width */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
@@ -28,7 +34,11 @@ st.markdown(
 #App logo and catch sentence
 logo = Image.open('images/logo1.png')
 st.image(logo, use_container_width=True)
-st.markdown("<h2 style='text-align: center; margin-top: -50px; color: #37474F;'>Discover an easier way to make healthier food choices</h2>", unsafe_allow_html=True)
+st.markdown(
+    "<h2 style='text-align: center; margin-top: -50px; color: #37474F; white-space: nowrap; font-size: 2.5em;'>"
+    "Discover an easier way to make healthier food choices</h2>",
+    unsafe_allow_html=True
+)
 
 # User input (removed after product identified)
 input_placeholder = st.empty()
