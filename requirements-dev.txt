@@ -20,7 +20,10 @@ streamlit
 
 # Barcode
 pyzbar
+
+# CV
 opencv-python-headless
+google.cloud.vision
 
 # Prettify
 tabulate
@@ -33,6 +36,9 @@ setuptools
 
 # Models
 joblib
+torch
+transformers
+xgboost
 
 # Deployment
 fastapi
@@ -40,8 +46,6 @@ uvicorn
 
 #.env
 python-dotenv
-
-google.cloud.vision
 
 # OpenAI
 BeautifulSoup4

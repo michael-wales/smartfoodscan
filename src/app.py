@@ -9,6 +9,8 @@ from PIL import Image
 import requests
 import plotly.graph_objects as go
 import base64
+import pickle
+import pandas as pd
 
 
 
@@ -151,8 +153,21 @@ if image:
                     'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
                     'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
                 }
+
+                # Load the scaler
+                with open("models/robust_scaler.pkl", "rb") as f:
+                    robust_scaler = pickle.load(f)
+
+                input_data = pd.DataFrame(data, index=[0])
+
+                input_data_scaled = pd.DataFrame(robust_scaler.transform(input_data))
+                input_data_scaled.columns = input_data.columns
+
+                data = input_data_scaled.to_dict(orient='records')[0]
+
                 url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
                 response = requests.post(url, json=data)
+
                 prediction = response.json()['prediction']
 
             score_value = max(0, min(prediction[0], 100))
@@ -284,6 +299,20 @@ if image:
                             'other_carbohydrates_100g': nutriments.get('carbohydrates_100g', 0) - nutriments.get('sugars_100g', 0) - nutriments.get('fiber_100g', 0),
                             'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
                         }
+
+
+                        # Load the scaler
+                        with open("models/robust_scaler.pkl", "rb") as f:
+                            robust_scaler = pickle.load(f)
+
+
+                        input_data = pd.DataFrame(data, index=[0])
+
+                        input_data_scaled = pd.DataFrame(robust_scaler.transform(input_data))
+                        input_data_scaled.columns = input_data.columns
+
+                        data = input_data_scaled.to_dict(orient='records')[0]
+
                         url = "https://smartfoodscan-805490564375.europe-west1.run.app/predict"
 
                         response = requests.post(url, json=data)
