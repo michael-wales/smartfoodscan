@@ -6,8 +6,7 @@ import cv2
 import numpy as np
 import streamlit as st
 
-client = vision.ImageAnnotatorClient()
-st.secrets['gcv_key']
+client = vision.ImageAnnotatorClient(api_key=st.secrets['gcv_key'])
 
 def extract_text(image):
     # with io.open(image, 'rb') as image_file:
