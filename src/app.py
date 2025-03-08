@@ -8,34 +8,58 @@ from chat_gpt.gpt import get_gpt_response
 from PIL import Image
 import requests
 import plotly.graph_objects as go
+import base64
+
+
 
 st.markdown(
     """
     <style>
+        .stApp {
+            background: url('images/pear.png') repeat-y center fixed;
+            background-size: contain;
+        }
         .block-container {
             max-width: 60%;  /* Increase content width */
+        }
+        .stRadio {display: flex; justify-content: center; margin-bottom: -100px;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+st.markdown("""
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap');
+    </style>
+""", unsafe_allow_html=True)
+
+#Background image
+background_image_path = "images/background.png"
+
+def get_base64(img_path):
+    with open(img_path, "rb") as file:
+        encoded = base64.b64encode(file.read()).decode()
+    return encoded
+bg_image_base64 = get_base64(background_image_path)
 
 st.markdown(
-    """
+    f"""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
-        #MainMenu, header, footer {visibility: hidden; height: 0%;}
-        html {filter: none;}
-        .stRadio {display: flex; justify-content: center; margin-bottom: -100px;}
+    .stApp {{
+        background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("data:image/png;base64,{bg_image_base64}") no-repeat center center fixed;
+        background-size: cover;
+    }}
     </style>
     """,
-    unsafe_allow_html=True)
+    unsafe_allow_html=True
+)
 
 #App logo and catch sentence
 logo = Image.open('images/logo1.png')
 st.image(logo, use_container_width=True)
 st.markdown(
-    "<h2 style='text-align: center; margin-top: -50px; color: #37474F; white-space: nowrap; font-size: 2.5em;'>"
+    "<h2 style='text-align: center; margin-top: -50px; white-space: nowrap; font-size: 2.75em; font-family: \"Chewy\", sans-serif;'>"
     "Discover an easier way to make healthier food choices</h2>",
     unsafe_allow_html=True
 )
@@ -84,12 +108,12 @@ if image:
             col1, col2= st.columns([1, 3])
             with col1:
                 if "image_url" in product_info:
-                    st.markdown(f'<img src="{product_info.get("image_url", "")}" height="350" style="display: block; margin-bottom: -10000px;"/>', unsafe_allow_html=True)
+                    st.markdown(f'<img src="{product_info.get("image_url", "")}" height="300" style="display: block; margin-bottom: -10000px;"/>', unsafe_allow_html=True)
                 else:
                     st.image(f"images/no-photo-available.jpg", width=200)
             with col2:
                 st.markdown(f"""
-                <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; height: 350px;">
+                <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; height: 300px;">
                     <h3 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Name:</span>{product_info.get('product_name', 'Unknown').title()}</h3>
                     <h4 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Barcode:</span> {barcode}</h4>
                     <h4 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Brand:</span> {product_info.get('brands', 'Unknown').split(',')[0].title()}</h4>
@@ -122,13 +146,10 @@ if image:
                 response = requests.post(url, json=data)
                 prediction = response.json()['prediction']
 
-            col1, col2= st.columns([1, 1])
-            with col1:
-                # Display healthiness score with a progress bar
-                score_value = max(0, min(prediction[0], 100))
-                score_value = 100 - score_value  # Invert the score
-                # Fake the numbers
-                score_value = 100 * (score_value / 100) ** 1.5
+            score_value = max(0, min(prediction[0], 100))
+            score_value = 100 - score_value  # Invert the score
+            # Fake the numbers
+            # score_value = 100 * (score_value / 100) ** 1.5
 
                 # if score_value < 33.33:
                 #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
@@ -141,35 +162,44 @@ if image:
                 # else:
                 #     st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
 
-                value = int(score_value)
-                bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
-                fig = go.Figure(go.Indicator(
-                    mode="gauge+number",
-                    value=value,
-                    title={'text': "Healthiness Score",'font': {'size': 25}},
-                    gauge={
-                        'axis': {'visible': True, 'range': [0, 100],'tickwidth': 2, 'tickcolor': 'black'},
-                        'bar': {'color': bar_color,'thickness': 1},
-                        'steps': [],
-                        'shape': 'angular',
-                        'bordercolor': "black",
-                        'borderwidth': 1,
-                        'bgcolor': 'rgba(0,0,0,0)'}))
-                st.markdown('<style>div.row-widget.stPlotlyChart {margin-top: -200px;}</style>', unsafe_allow_html=True)
-                st.plotly_chart(fig, use_container_width=True)
+            value = int(score_value)
+            bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
+            fig = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=value,
+                title={'text': "",'font': {'size': 30, 'color': '#37474F'}},
+                gauge={
+                    'axis': {'visible': True, 'range': [0, 100],'tickwidth': 2, 'tickcolor': 'black'},
+                    'bar': {'color': bar_color,'thickness': 1},
+                    'steps': [],
+                    'shape': 'angular',
+                    'bordercolor': "black",
+                    'borderwidth': 1,
+                    'bgcolor': 'rgba(0,0,0,0)'},
+                ))
+            fig.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                height=300,
+                margin=dict(l=0, r=0, t=0, b=0),
+                )
+            st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-bottom: -100px; margin-top: 50px;'>Healthiness Score</h3>", unsafe_allow_html=True)
+            st.markdown('<div style="height: 100px;"></div>', unsafe_allow_html=True)
+            st.plotly_chart(fig, use_container_width=True)
+
+            #Chat GPT details
+            chatgpt_response = get_gpt_response(barcode)
+            if chatgpt_response:
+                st.markdown("<h3 style='text-align: center; margin-top:50px ;font-family: \"Chewy\", sans-serif;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
+                st.write(chatgpt_response)
+
+            with st.container():
+                button_clicked = st.button("🔄 Scan Another Product", key="go_back", help="Click to scan another product", use_container_width=True)
+
+            if button_clicked:
+                st.rerun()
 
 
-            if st.button("🔄 Scan Another Product"):
-                st.session_state.product_info = None
-                st.session_state.barcode = None
-                st.experimental_rerun()
-
-            with col2:
-                #Chat GPT details
-                chatgpt_response = get_gpt_response(barcode)
-                if chatgpt_response:
-                    st.markdown("<h3 style='text-align: center;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
-                    st.write(chatgpt_response)
 
 
 
