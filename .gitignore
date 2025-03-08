@@ -16,4 +16,5 @@ Thumbs.db  # Windows
 
 # Large files
 *.joblib
-*.pkl
+X_*
+y_*
