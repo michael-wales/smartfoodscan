@@ -170,65 +170,65 @@ if image:
 
                 prediction = response.json()['prediction']
 
-            score_value = max(0, min(prediction[0], 100))
-            score_value = 100 - score_value  # Invert the score
-            # Fake the numbers
-            # score_value = 100 * (score_value / 100) ** 1.5
+                score_value = max(0, min(prediction[0], 100))
+                score_value = 100 - score_value  # Invert the score
+                # Fake the numbers
+                # score_value = 100 * (score_value / 100) ** 1.5
 
-                # if score_value < 33.33:
-                #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
-                # elif score_value < 60:
-                #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Low Healthiness ⚠️")
-                # elif score_value < 80:
-                #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Moderately Healthy ✅")
-                # elif score_value < 93.33:
-                #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
-                # else:
-                #     st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
+                    # if score_value < 33.33:
+                    #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
+                    # elif score_value < 60:
+                    #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Low Healthiness ⚠️")
+                    # elif score_value < 80:
+                    #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Moderately Healthy ✅")
+                    # elif score_value < 93.33:
+                    #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
+                    # else:
+                    #     st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
 
-            value = int(score_value)
-            bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
-            fig = go.Figure(go.Indicator(
-                mode="gauge+number",
-                value=value,
-                title={'text': "",'font': {'size': 30, 'color': '#37474F'}},
-                gauge={
-                    'axis': {'visible': True, 'range': [0, 100],'tickwidth': 2, 'tickcolor': 'black'},
-                    'bar': {'color': bar_color,'thickness': 1},
-                    'steps': [],
-                    'shape': 'angular',
-                    'bordercolor': "black",
-                    'borderwidth': 1,
-                    'bgcolor': 'rgba(0,0,0,0)'},
-                ))
-            fig.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                height=300,
-                margin=dict(l=0, r=0, t=0, b=0),
-                )
-            col1, col2= st.columns([1, 1])
-            with col1:
-                st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
-            with col2:
-                st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
-                st.image(f"images/F&V.png", width=150)
-
-
-            st.markdown('<div style="height: 100px;margin-top:-100px;"></div>', unsafe_allow_html=True)
-            st.plotly_chart(fig, use_container_width=True)
-
-            st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
-
-            #Chat GPT details
-            chatgpt_response = get_gpt_response(barcode)
-            if chatgpt_response:
-                col1, col2= st.columns([3, 1])
+                value = int(score_value)
+                bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
+                fig = go.Figure(go.Indicator(
+                    mode="gauge+number",
+                    value=value,
+                    title={'text': "",'font': {'size': 30, 'color': '#37474F'}},
+                    gauge={
+                        'axis': {'visible': True, 'range': [0, 100],'tickwidth': 2, 'tickcolor': 'black'},
+                        'bar': {'color': bar_color,'thickness': 1},
+                        'steps': [],
+                        'shape': 'angular',
+                        'bordercolor': "black",
+                        'borderwidth': 1,
+                        'bgcolor': 'rgba(0,0,0,0)'},
+                    ))
+                fig.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    height=300,
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    )
+                col1, col2= st.columns([1, 1])
                 with col1:
-                    st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -200px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
+                    st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
                 with col2:
-                    st.image(f"images/Pineapple.png", width=50)
-                st.write(chatgpt_response)
+                    st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
+                    st.image(f"images/F&V.png", width=150)
+
+
+                st.markdown('<div style="height: 100px;margin-top:-100px;"></div>', unsafe_allow_html=True)
+                st.plotly_chart(fig, use_container_width=True)
+
+                st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+
+                #Chat GPT details
+                chatgpt_response = get_gpt_response(barcode)
+                if chatgpt_response:
+                    col1, col2= st.columns([3, 1])
+                    with col1:
+                        st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -200px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
+                    with col2:
+                        st.image(f"images/Pineapple.png", width=50)
+                    st.write(chatgpt_response)
 
             st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
             with st.container():
@@ -236,10 +236,6 @@ if image:
 
             if button_clicked:
                 st.rerun()
-
-
-
-
 
 
 
@@ -269,22 +265,6 @@ if image:
                     nutriments = extract_nutritional_info(image)
 
                     if isinstance(nutriments, dict):
-
-                        # Nutritional information visualization
-                        st.subheader("Nutritional Information")
-                        if "nutriments" in nutriments:
-                            nutrients = {
-                                "Energy (kcal)": nutriments.get('energy-kcal_100g', 0),
-                                "Saturated Fat (g)": nutriments.get('saturated-fat_100g', 0),
-                                "Sugars (g)": nutriments.get('sugars_100g', 0),
-                                "Protein (g)": nutriments.get('proteins_100g', 0),
-                                "Fiber (g)": nutriments.get('fiber_100g', 0),
-                                "Sodium (mg)": nutriments.get('sodium_100g', 0),
-                            }
-                            st.bar_chart(nutrients)
-
-                        # Healthiness score prediction
-                        st.subheader("⚕️ Healthiness Score")
                         data = {
                             'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
                             'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
@@ -300,11 +280,9 @@ if image:
                             'other_fat_100g': nutriments.get('fat_100g', 0) - nutriments.get('saturated-fat_100g', 0) - nutriments.get('trans-fat_100g', 0)
                         }
 
-
                         # Load the scaler
                         with open("models/robust_scaler.pkl", "rb") as f:
                             robust_scaler = pickle.load(f)
-
 
                         input_data = pd.DataFrame(data, index=[0])
 
@@ -318,21 +296,59 @@ if image:
                         response = requests.post(url, json=data)
 
                         prediction = response.json()['prediction']
-
-                        # Display healthiness score with a progress bar
                         score_value = max(0, min(prediction[0], 100))
                         score_value = 100 - score_value  # Invert the score
-                        st.progress(score_value / 100)
-                        if score_value < 33.33:
-                            st.error(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
-                        elif score_value < 60:
-                            st.warning(f"Healthiness Score: {score_value:.0f}/100 - Low Healthiness ⚠️")
-                        elif score_value < 80:
-                            st.info(f"Healthiness Score: {score_value:.0f}/100 - Moderately Healthy ✅")
-                        elif score_value < 93.33:
-                            st.success(f"Healthiness Score: {score_value:.0f}/100 - Healthy 🌿")
-                        else:
-                            st.success(f"Healthiness Score: {score_value:.0f}/100 - Highly Healthy 🌟")
+
+                        value = int(score_value)
+                        bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
+                        fig = go.Figure(go.Indicator(
+                            mode="gauge+number",
+                            value=value,
+                            title={'text': "",'font': {'size': 30, 'color': '#37474F'}},
+                            gauge={
+                                'axis': {'visible': True, 'range': [0, 100],'tickwidth': 2, 'tickcolor': 'black'},
+                                'bar': {'color': bar_color,'thickness': 1},
+                                'steps': [],
+                                'shape': 'angular',
+                                'bordercolor': "black",
+                                'borderwidth': 1,
+                                'bgcolor': 'rgba(0,0,0,0)'},
+                            ))
+                        fig.update_layout(
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            height=300,
+                            margin=dict(l=0, r=0, t=0, b=0),
+                            )
+                        col1, col2= st.columns([1, 1])
+                        with col1:
+                            st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
+                        with col2:
+                            st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
+                            st.image(f"images/F&V.png", width=150)
+
+
+                        st.markdown('<div style="height: 100px;margin-top:-100px;"></div>', unsafe_allow_html=True)
+                        st.plotly_chart(fig, use_container_width=True)
+
+                        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+
+                        #Chat GPT details
+                        chatgpt_response = get_gpt_response(barcode)
+                        if chatgpt_response:
+                            col1, col2= st.columns([3, 1])
+                            with col1:
+                                st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -200px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
+                            with col2:
+                                st.image(f"images/Pineapple.png", width=50)
+                            st.write(chatgpt_response)
+
+                        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+                        with st.container():
+                            button_clicked = st.button("🔄 Scan Another Product", key="go_back", help="Click to scan another product", use_container_width=True)
+
+                        if button_clicked:
+                            st.rerun()
 
     else:
         st.error("Could not detect a barcode. Try another image.")
