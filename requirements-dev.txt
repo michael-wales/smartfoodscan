@@ -50,3 +50,6 @@ python-dotenv
 # OpenAI
 BeautifulSoup4
 openai==0.28
+
+plotly
+base64
