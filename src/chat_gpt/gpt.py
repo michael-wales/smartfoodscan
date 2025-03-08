@@ -1,6 +1,7 @@
 import openai
 import requests
 from bs4 import BeautifulSoup
+import streamlit as st
 
 
 #barcode = "3017620422003"
@@ -9,8 +10,7 @@ from bs4 import BeautifulSoup
 #function to get the response from the model
 def get_gpt_response(barcode):
     # Set your OpenAI API key
-    openai.api_key="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"
-    #openai.api_key = st.secrets["api_key"]
+    openai.api_key = st.secrets["api_key"]
 
     # Get the product information from the OpenFoodFacts API
     url = f"https://world.openfoodfacts.org/product/{barcode}"
