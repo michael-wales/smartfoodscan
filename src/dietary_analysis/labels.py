@@ -5,8 +5,8 @@ def check_labels(product):
     labels = {'vegan':None,
               'vegetarian':None,
               'palm-oil-free':None,
-              'gluten-free': 'yes',
-              'lactose-free': 'yes'}
+              'gluten-free': None,
+              'lactose-free': None}
 
     if product_labels:
         if "en:vegan" in product_labels:
@@ -36,9 +36,13 @@ def check_labels(product):
         allergens = allergens[0]
         if "en:milk" in allergens:
             labels['lactose-free'] = 'no'
+        else:
+            labels['lactose-free'] = 'yes'
 
         if "en:gluten" in allergens:
             labels['gluten-free'] = 'no'
+        else:
+            labels['gluten-free'] = 'yes'
     print(allergens)
     print(labels)
     return labels
