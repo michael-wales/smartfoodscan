@@ -5,20 +5,53 @@ import re
 import cv2
 import numpy as np
 import streamlit as st
+import base64
+import requests
 
-client = vision.ImageAnnotatorClient(api_key=st.secrets['gcv_key'])
 
-def extract_text(image):
-    # with io.open(image, 'rb') as image_file:
-    #     content = image_file.read()
+API_KEY = st.secrets['gcv_key']
 
-    content = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR).tobytes()
+url = f'https://vision.googleapis.com/v1/images:annotate?key={API_KEY}'
 
-    image = vision.Image(content=content)
-    response = client.text_detection(image=image)
-    texts = response.text_annotations
+# Prepare the image you want to analyze (base64 encoded)
+def encode_image(image_path):
+    with open(image_path, 'rb') as image_file:
+        return base64.b64encode(image_file.read()).decode('UTF-8')
 
-    return texts[0].description if texts else ""
+# Example image path (replace with the path to your image)
+image_path = '../images/nutrition_facts3.jpg'
+image_path = '../images/yerba-mate2.png'
+
+# Base64 encode the image
+encoded_image = encode_image(image_path)
+
+# Construct the request payload
+payload = {
+    "requests": [
+        {
+            "image": {
+                "content": encoded_image
+            },
+            "features": [
+                {
+                    "type": "TEXT_DETECTION",
+                    "maxResults": 10
+                }
+            ]
+        }
+    ]
+}
+
+# Send the POST request
+response = requests.post(url, json=payload)
+
+# Check the response
+if response.status_code == 200:
+    print('Response:', response.json())  # Print the JSON response from the API
+else:
+    print(f"Request failed with status code: {response.status_code}")
+    print(f"Error: {response.text}")
+
 
 features = ['energy-kcal_100g', 'saturated-fat_100g', 'trans-fat_100g', 'cholesterol_100g',
             'sugars_100g', 'fiber_100g', 'proteins_100g', 'sodium_100g', 'calcium_100g',
@@ -136,7 +169,7 @@ def convert_to_100g(nutrition_dict, serving_size):
     return nutrition_100g
 
 def extract_nutritional_info(image):
-    text = extract_text(image)
+    text = encode_image(image)
     nutrition_list = text.split("\n")
     nutrition_list = [nutrient for nutrient in nutrition_list if nutrient]
     nutrition_dict = {feature: 0 for feature in features}
