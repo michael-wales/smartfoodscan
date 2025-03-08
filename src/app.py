@@ -4,7 +4,7 @@ from product_info.api_fetcher import get_product_info
 from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
 from nutrition_reader import extract_nutritional_info
-from chat_gpt.gpt import get_gpt_response
+from chat_gpt.gpt import get_gpt_response, get_gpt_response2
 from PIL import Image
 import requests
 import plotly.graph_objects as go
@@ -193,9 +193,21 @@ if image:
                 st.markdown("<h3 style='text-align: center; margin-top:50px ;font-family: \"Chewy\", sans-serif;'>Here are some usefull insights about this product</h3>", unsafe_allow_html=True)
                 st.write(chatgpt_response)
 
+            #Chat GPT details
+            chatgpt_response2 = get_gpt_response2(barcode)
+            if chatgpt_response2:
+                st.markdown("<h3 style='text-align: center; margin-top:50px ;font-family: \"Chewy\", sans-serif;'>Here are some healthier options</h3>", unsafe_allow_html=True)
+                st.write(chatgpt_response2)
+
+
+
+
+
+
             with st.container():
                 button_clicked = st.button("🔄 Scan Another Product", key="go_back", help="Click to scan another product", use_container_width=True)
-
+                
+            
             if button_clicked:
                 st.rerun()
 
