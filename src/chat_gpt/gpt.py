@@ -4,13 +4,15 @@ from bs4 import BeautifulSoup
 import streamlit as st
 
 
-#barcode = "3017620422003"
+barcode = "3017620422003"
 
 
 #function to get the response from the model
 def get_gpt_response(barcode):
     # Set your OpenAI API key
+    
     openai.api_key = st.secrets["api_key"]
+    
 
     # Get the product information from the OpenFoodFacts API
     url = f"https://world.openfoodfacts.org/product/{barcode}"
@@ -34,3 +36,32 @@ def get_gpt_response(barcode):
     return response.choices[0].message.content
 
 #print(get_gpt_response(barcode))
+
+def get_gpt_response2(barcode):
+    # Set your OpenAI API key
+    
+    openai.api_key = st.secrets["api_key"]
+
+    # Get the product information from the OpenFoodFacts API
+    url = f"https://world.openfoodfacts.org/product/{barcode}"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    text = soup.get_text()
+
+    # Prompt the model with the product information
+    prompt = f"analyse this product and specifically suggest me 3 healthier options of similar products that are in openfoodfacts.org and give me the barcode and image. you can avoid to give me information about the actual product:\n\n{text[:4000]}"
+
+    # Get the response from the model
+    response = openai.ChatCompletion.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "You are a nutrition expert reviewing a product."},
+        {"role": "user", "content": prompt},
+    ],
+    max_tokens=400
+    
+
+    )
+    return response.choices[0].message.content
+
+print(get_gpt_response2(barcode))
