@@ -27,3 +27,4 @@ BeautifulSoup4
 google.cloud.vision
 
 plotly
+base64
