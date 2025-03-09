@@ -6,7 +6,7 @@ requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(
     name="smartfoodscan",
-    version="0.1.0",
+    version="1.0.0",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
 
