@@ -276,8 +276,7 @@ def convert_to_100g(nutrition_dict, serving_size):
 
 
 def extract_nutritional_info(image):
-    # API_KEY = st.secrets['gcv_key']
-    API_KEY = "AIzaSyAc_uh4F6reEpgtpxBmW7_OaaqXT2Z9p48"
+    API_KEY = st.secrets['gcv_key']
 
     response_data, extracted_text = analyze_image_with_vision_api(image, API_KEY)
     # print(response_data, extracted_text)
