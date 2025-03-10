@@ -210,27 +210,37 @@ def extract_values(nutrition_dict, nutrition_list, key_mapping):
         for i, item in enumerate(nutrition_list):
             if search_term.lower() in item.lower():
                 # If we find "Calories", we need to explicitly capture the next numeric value
-                if search_term.lower() == 'calories':
-                    if i + 1 < len(nutrition_list):
-                        match = re.search(r'(\d+\.?\d*)', nutrition_list[i + 1])
-                        if match:
-                            value = match.group(1)
-                            nutrition_dict[key] = float(value) if '.' in value else int(value)
-                    break
-                # Handle "Calcium" and "Iron" to capture next numeric values
-                elif search_term.lower() == 'calcium' or search_term.lower() == 'iron':
-                    if i + 1 < len(nutrition_list):
-                        match = re.search(r'(\d+)%?', nutrition_list[i + 1])
-                        if match:
-                            value = match.group(1)
-                            nutrition_dict[key] = float(value)/100 if '.' in value else int(value)/100
-                    break
+                # if search_term.lower() == 'calories':
+                #     if i + 1 < len(nutrition_list):
+                #         match = re.search(r'(\d+\.?\d*)', nutrition_list[i + 1])
+                #         if match:
+                #             value = match.group(1)
+                #             nutrition_dict[key] = float(value) if '.' in value else int(value)
+                #     break
+                # # Handle "Calcium" and "Iron" to capture next numeric values
+                # elif search_term.lower() == 'calcium' or search_term.lower() == 'iron':
+                #     if i + 1 < len(nutrition_list):
+                #         match = re.search(r'(\d+)%?', nutrition_list[i + 1])
+                #         if match:
+                #             value = match.group(1)
+                #             nutrition_dict[key] = float(value)/100 if '.' in value else int(value)/100
+                #     break
 
-                elif search_term.lower() == 'ingredients':
-                    match = re.search(r'ingredients[:\s]*([^$]+)', item, re.IGNORECASE)
+                # if search_term.lower() == 'ingredients':
+                #     match = re.search(r'ingredients[:\s]*([^$]+)', item, re.IGNORECASE)
+                #     if match:
+                #         ingredients_text = match.group(1).strip()  # Capture the text after "Ingredients:"
+                #         nutrition_dict[key] = ingredients_text
+                #     break
+
+                if search_term.lower() == 'ingredients':
+
+                    match = re.search(r'ingredients[:\s]*([^\$]+)', item, re.IGNORECASE)
                     if match:
-                        ingredients_text = match.group(1).strip()  # Capture the text after "Ingredients:"
-                        nutrition_dict[key] = ingredients_text
+                        ingredients_text = match.group(1).strip()
+                        ingredients_text = re.sub(r'\s{2,}', ' ', ingredients_text)
+                        formatted_ingredients = ingredients_text.replace(",", ",\n").strip() + ','
+                        nutrition_dict[key] = formatted_ingredients
                     break
 
                 else:
@@ -247,7 +257,7 @@ def extract_values(nutrition_dict, nutrition_list, key_mapping):
 def convert_mg_to_g(nutrition_dict):
     # Conversion factor: 1 mg = 0.001 g
     conversion_factor = 0.001
-    keys_to_convert = ['cholesterol_100g', 'sodium_100g']
+    keys_to_convert = ['cholesterol_100g', 'sodium_100g', 'calcium_100g', 'iron_100g']
 
     for key in keys_to_convert:
         if key in nutrition_dict:
@@ -274,6 +284,7 @@ def convert_to_100g(nutrition_dict, serving_size):
 
     return nutrition_100g
 
+
 def extract_nutritional_info(image):
     # API_KEY = st.secrets['gcv_key']
     API_KEY = "AIzaSyAc_uh4F6reEpgtpxBmW7_OaaqXT2Z9p48"
@@ -294,6 +305,6 @@ def extract_nutritional_info(image):
     nutrition_dict = extract_values(nutrition_dict, nutrition_list, key_mapping)
     nutrition_dict = convert_mg_to_g(nutrition_dict)
     serving_size = extract_serving_size(nutrition_list)
-    nutrition_dict = convert_to_100g(nutrition_dict, serving_size)  # Convert to per 100g
+    nutrition_dict = convert_to_100g(nutrition_dict, serving_size)
 
     return nutrition_dict
