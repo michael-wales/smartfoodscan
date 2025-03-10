@@ -225,21 +225,11 @@ def extract_values(nutrition_dict, nutrition_list, key_mapping):
                 #             nutrition_dict[key] = float(value)/100 if '.' in value else int(value)/100
                 #     break
 
-                # if search_term.lower() == 'ingredients':
-                #     match = re.search(r'ingredients[:\s]*([^$]+)', item, re.IGNORECASE)
-                #     if match:
-                #         ingredients_text = match.group(1).strip()  # Capture the text after "Ingredients:"
-                #         nutrition_dict[key] = ingredients_text
-                #     break
-
                 if search_term.lower() == 'ingredients':
-
-                    match = re.search(r'ingredients[:\s]*([^\$]+)', item, re.IGNORECASE)
+                    match = re.search(r'ingredients[:\s]*([^$]+)', item, re.IGNORECASE)
                     if match:
                         ingredients_text = match.group(1).strip()
-                        ingredients_text = re.sub(r'\s{2,}', ' ', ingredients_text)
-                        formatted_ingredients = ingredients_text.replace(",", ",\n").strip() + ','
-                        nutrition_dict[key] = formatted_ingredients
+                        nutrition_dict[key] = ingredients_text
                     break
 
                 else:
