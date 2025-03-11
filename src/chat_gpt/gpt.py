@@ -96,7 +96,6 @@ def get_gpt_response_without_barcode(data):
 
     openai.api_key = st.secrets["api_key"]
 
-    {'energy-kcal_100g': 0, 'saturated-fat_100g': 0, 'trans-fat_100g': 0, 'cholesterol_100g': 0, 'sugars_100g': 0, 'fiber_100g': 0, 'proteins_100g': 0, 'sodium_100g': 0.0021212121212121214, 'calcium_100g': 0.0030303030303030303, 'iron_100g': 0, 'other_carbohydrates_100g': 0, 'fat_100g': 0, 'ingredients': 'Yerba mate infusion* (carbo'}
     text = f"This product contains {data.get('energy-kcal_100g', 0)} kcal per 100 g, {data.get('saturated-fat_100g', 0)} g of saturated fat per 100 g, {data.get('trans-fat_100g', 0)} g of trans fat per 100 g, {data.get('cholesterol_100g', 0)} mg of cholesterol per 100 g, {data.get('sugars_100g', 0)} g of sugars per 100 g, {data.get('fiber_100g', 0)} g of fiber per 100 g, {data.get('proteins_100g', 0)} g of protein per 100 g, {data.get('sodium_100g', 0)} mg of sodium per 100 g, {data.get('calcium_100g', 0)} mg of calcium per 100 g, {data.get('iron_100g', 0)} mg of iron per 100 g, {data.get('other_carbohydrates_100g', 0)} g of other carbohydrates per 100 g, and {data.get('fat_100g', 0)} g of other fats per 100 g. The ingredients are: {data.get('ingredients', 'not available')}"
 
     # Prompt the model with the product information
