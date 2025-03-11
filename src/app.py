@@ -71,7 +71,7 @@ input_placeholder = st.empty()
 with input_placeholder.container():
     col1, col2= st.columns([3, 1])
     with col1:
-        st.markdown("<h3 style='text-align: center; margin-right: -200px;color: #455A64;'>How would you like to search for a product?</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; margin-right: -150px;color: #455A64;'>How would you like to search for a product?</h3>", unsafe_allow_html=True)
     with col2:
         st.image(f"images/Apple.png", width=50)
     option = st.radio("", ["📸 Take a picture of barcode", "📁 Upload barcode image from device"], horizontal=True,key="search_option")
@@ -101,7 +101,7 @@ if image:
             st.success("✅ Product Found")
             col1, col2= st.columns([2, 1])
             with col1:
-                st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -350px; margin-top: 30px; '>Some product information</h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 30px; '>Some product information</h3>", unsafe_allow_html=True)
             with col2:
                 st.image(f"images/Carrot.png", width=50)
             labels = check_labels(product_info)
@@ -209,7 +209,7 @@ if image:
                     )
                 col1, col2= st.columns([1, 1])
                 with col1:
-                    st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
+                    st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -275px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
                 with col2:
                     st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
                     st.image(f"images/F&V.png", width=150)
@@ -225,7 +225,7 @@ if image:
                 if chatgpt_response:
                     col1, col2= st.columns([3, 1])
                     with col1:
-                        st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -200px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
+                        st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -150px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
                     with col2:
                         st.image(f"images/Pineapple.png", width=50)
                     st.write(chatgpt_response)
@@ -246,7 +246,7 @@ if image:
 
             input_placeholder = st.empty()
             with input_placeholder.container():
-                st.markdown("<h2 style='text-align: center; font-size: 30px; font-weight: bold; margin-top: 10px; margin-bottom: -70px;'>How would you like to search for a product?</p>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align: center; margin-top: 10px; margin-bottom: -70px; color: #455A64'>How would you like to submit nutritional facts?</p>", unsafe_allow_html=True)
                 option = st.radio("", ["📸 Take a picture of nutritional facts", "📁 Upload nutritional facts image from device"], horizontal=True,key="search_option2")
 
                 if option == "📸 Take a picture of nutritional facts":
@@ -344,7 +344,7 @@ if image:
                             )
                         col1, col2= st.columns([1, 1])
                         with col1:
-                            st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -300px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
+                            st.markdown("<h3 style='text-align: center;  font-family: \"Chewy\", sans-serif; margin-right: -275px; margin-top: 100px '>Healthiness Score</h3>", unsafe_allow_html=True)
                         with col2:
                             st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
                             st.image(f"images/F&V.png", width=150)
@@ -360,7 +360,7 @@ if image:
                         if chatgpt_response:
                             col1, col2= st.columns([3, 1])
                             with col1:
-                                st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -200px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
+                                st.markdown("<h3 style='text-align: center; margin-top:50px ;margin-right: -150px;font-family: \"Chewy\", sans-serif;'>Here are some useful insights about this product</h3>", unsafe_allow_html=True)
                             with col2:
                                 st.image(f"images/Pineapple.png", width=50)
                             st.write(chatgpt_response)
