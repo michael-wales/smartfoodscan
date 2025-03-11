@@ -265,8 +265,30 @@ if image:
                 input_placeholder.empty()
                 with st.spinner("Fetching product info..."):
                     nutriments = extract_nutritional_info(image)
+                    print("The nutriments are: ", nutriments)
+
 
                     if isinstance(nutriments, dict):
+<<<<<<< HEAD
+
+                        # Nutritional information visualization
+                        st.subheader("Nutritional Information")
+                        # if "nutriments" in nutriments:
+                        nutrients = {
+                            "Energy (kcal)": nutriments.get('energy-kcal_100g', 0),
+                            "Saturated Fat (g)": nutriments.get('saturated-fat_100g', 0),
+                            "Sugars (g)": nutriments.get('sugars_100g', 0),
+                            "Protein (g)": nutriments.get('proteins_100g', 0),
+                            "Fiber (g)": nutriments.get('fiber_100g', 0),
+                            "Sodium (mg)": nutriments.get('sodium_100g', 0),
+                        }
+                        print("The nutrients are: ", nutrients)
+                        st.bar_chart(nutrients)
+
+                        # Healthiness score prediction
+                        st.subheader("⚕️ Healthiness Score")
+=======
+>>>>>>> d1d0115e237fd338a8920f4f0743e4d2d88c36cc
                         data = {
                             'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
                             'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
