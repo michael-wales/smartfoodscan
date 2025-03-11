@@ -281,12 +281,12 @@ def extract_nutritional_info(image):
     response_data, extracted_text = analyze_image_with_vision_api(image, API_KEY)
     # print(response_data, extracted_text)
 
-    if response_data:
-        print("API Response:", json.dumps(response_data, indent=2))
-        if extracted_text:
-            print("\nExtracted Text:", extracted_text)
-        else:
-            print("\nNo text found in the image.")
+    # if response_data:
+    #     print("API Response:", json.dumps(response_data, indent=2))
+    #     if extracted_text:
+    #         print("\nExtracted Text:", extracted_text)
+    #     else:
+    #         print("\nNo text found in the image.")
 
     nutrition_list = extracted_text.split("\n")
     nutrition_list = [nutrient for nutrient in nutrition_list if nutrient]
@@ -295,5 +295,5 @@ def extract_nutritional_info(image):
     nutrition_dict = convert_mg_to_g(nutrition_dict)
     serving_size = extract_serving_size(nutrition_list)
     nutrition_dict = convert_to_100g(nutrition_dict, serving_size)
-
+    # print(nutrition_dict)
     return nutrition_dict
