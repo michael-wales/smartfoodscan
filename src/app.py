@@ -173,7 +173,7 @@ if image:
                 score_value = max(0, min(prediction[0], 100))
                 score_value = 100 - score_value  # Invert the score
                 # Fake the numbers
-                # score_value = 100 * (score_value / 100) ** 1.5
+                score_value = 100 * (score_value / 100) ** 1.5
 
                     # if score_value < 33.33:
                     #     st.write(f"Healthiness Score: {score_value:.0f}/100 - Unhealthy 🚫")
@@ -320,7 +320,7 @@ if image:
                         prediction = response.json()['prediction']
                         score_value = max(0, min(prediction[0], 100))
                         score_value = 100 - score_value  # Invert the score
-
+                        score_value = 100 * (score_value / 100) ** 1.5
                         value = int(score_value)
                         bar_color = '#FF4B4B' if value <= 25 else '#FF6F6F' if value <= 50 else '#FFB74D' if value <= 75 else '#8C9A00'
                         fig = go.Figure(go.Indicator(
