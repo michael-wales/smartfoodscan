@@ -4,7 +4,7 @@ from product_info.api_fetcher import get_product_info
 from dietary_analysis.allergens import identify_allergens
 from dietary_analysis.labels import check_labels
 from nutrition_reader import extract_nutritional_info
-from chat_gpt.gpt import get_gpt_response, get_gpt_response2
+from chat_gpt.gpt import get_gpt_response, get_gpt_response_without_barcode
 from PIL import Image
 import requests
 import plotly.graph_objects as go
@@ -266,7 +266,6 @@ if image:
                 with st.spinner("Fetching product info..."):
                     nutriments = extract_nutritional_info(image)
 
-
                     if isinstance(nutriments, dict):
 #### Undetermined conflict from Celeste's merge (March 10) - marked conflict free on pull request.
 ### The conflict starts here as HEAD (Current)
@@ -357,7 +356,7 @@ if image:
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
 
                         #Chat GPT details
-                        chatgpt_response = get_gpt_response(barcode)
+                        chatgpt_response = get_gpt_response_without_barcode(nutriments)
                         if chatgpt_response:
                             col1, col2= st.columns([3, 1])
                             with col1:

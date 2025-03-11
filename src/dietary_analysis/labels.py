@@ -43,6 +43,4 @@ def check_labels(product):
             labels['gluten-free'] = 'no'
         else:
             labels['gluten-free'] = 'yes'
-    print(allergens)
-    print(labels)
     return labels
