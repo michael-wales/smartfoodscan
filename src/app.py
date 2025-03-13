@@ -78,7 +78,7 @@ with input_placeholder.container():
 
     if option == "📸 Take a picture of barcode":
         st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
-        camera_image = st.camera_input("")
+        camera_image = st.camera_input("", key="mike_test")
         st.markdown('</div>', unsafe_allow_html=True)
         image = camera_image
 
@@ -251,7 +251,7 @@ if image:
 
                 if option == "📸 Take a picture of nutritional facts":
                     st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
-                    camera_image = st.camera_input("")
+                    camera_image = st.camera_input("", key="mike_test2")
                     st.markdown('</div>', unsafe_allow_html=True)
                     image = camera_image
 
