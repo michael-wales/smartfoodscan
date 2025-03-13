@@ -119,12 +119,12 @@ if image:
             col1, col2= st.columns([1, 3])
             with col1:
                 if "image_url" in product_info:
-                    st.markdown(f'<img src="{product_info.get("image_url", "")}" height="300" style="display: block; margin-bottom: -10000px;"/>', unsafe_allow_html=True)
+                    st.markdown(f'<img src="{product_info.get("image_url", "")}" height="350" style="display: block; margin-bottom: -10000px;"/>', unsafe_allow_html=True)
                 else:
                     st.image(f"images/no-photo-available.jpg", width=200)
             with col2:
                 st.markdown(f"""
-                <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; height: 300px;">
+                <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; height: 350px;">
                     <h3 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Name: </span>{product_info.get('product_name', 'Unknown').title()}</h3>
                     <h4 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Barcode:</span> {barcode}</h4>
                     <h4 style="font-size: 18px; margin-bottom: -20px;"><span style="font-weight: bold;">Brand:</span> {product_info.get('brands', 'Unknown').split(',')[0].title()}</h4>
