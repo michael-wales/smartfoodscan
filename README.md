@@ -10,6 +10,7 @@ SmartFoodScan is a Python-based application designed to help users analyze food 
 - **Nutritional Analysis:** Retrieves and processes nutrition facts from various sources.
 - **AI-Powered Insights:** Uses GPT-based AI to provide additional food-related recommendations.
 - **Dietary Allergen Detection:** Identifies potential allergens in food products.
+- **Optical Character Recognition**: Uses Google Cloud Vision API to detect and extract text from nutritional facts labels.
 
 ## License
 This project is licensed under the MIT License.
