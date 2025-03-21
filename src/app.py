@@ -267,26 +267,6 @@ if image:
                     nutriments = extract_nutritional_info(image)
 
                     if isinstance(nutriments, dict):
-#### Undetermined conflict from Celeste's merge (March 10) - marked conflict free on pull request.
-### The conflict starts here as HEAD (Current)
-
-                        # # Nutritional information visualization
-                        # st.subheader("Nutritional Information")
-                        # # if "nutriments" in nutriments:
-                        # nutrients = {
-                        #     "Energy (kcal)": nutriments.get('energy-kcal_100g', 0),
-                        #     "Saturated Fat (g)": nutriments.get('saturated-fat_100g', 0),
-                        #     "Sugars (g)": nutriments.get('sugars_100g', 0),
-                        #     "Protein (g)": nutriments.get('proteins_100g', 0),
-                        #     "Fiber (g)": nutriments.get('fiber_100g', 0),
-                        #     "Sodium (mg)": nutriments.get('sodium_100g', 0),
-                        # }
-                        # print("The nutrients are: ", nutrients)
-                        # st.bar_chart(nutrients)
-
-                        # # Healthiness score prediction
-                        # st.subheader("⚕️ Healthiness Score")
-### And ends here as Incoming
                         data = {
                             'energy-kcal_100g': nutriments.get('energy-kcal_100g', 0),
                             'saturated-fat_100g': nutriments.get('saturated-fat_100g', 0),
