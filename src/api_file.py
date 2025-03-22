@@ -11,9 +11,9 @@ with open('../models/best_model.joblib', 'rb') as file:
 
 # Define the expected JSON format using Pydantic
 class NutrimentInput(BaseModel):
-    energy_kcal_100g: float = 0.0
-    saturated_fat_100g: float = 0.0
-    trans_fat_100g: float = 0.0
+    energy-kcal_100g: float = 0.0
+    saturated-fat_100g: float = 0.0
+    trans-fat_100g: float = 0.0
     cholesterol_100g: float = 0.0
     sugars_100g: float = 0.0
     fiber_100g: float = 0.0
@@ -43,9 +43,9 @@ def predict(data):
 def predict(nutriments: NutrimentInput):
     # Convert input JSON into a Pandas DataFrame
     data = {
-        'energy-kcal_100g': [nutriments.energy_kcal_100g],
-        'saturated-fat_100g': [nutriments.saturated_fat_100g],
-        'trans-fat_100g': [nutriments.trans_fat_100g],
+        'energy-kcal_100g': [nutriments.energy-kcal_100g],
+        'saturated-fat_100g': [nutriments.saturated-fat_100g],
+        'trans-fat_100g': [nutriments.trans-fat_100g],
         'cholesterol_100g': [nutriments.cholesterol_100g],
         'sugars_100g': [nutriments.sugars_100g],
         'fiber_100g': [nutriments.fiber_100g],
@@ -57,7 +57,7 @@ def predict(nutriments: NutrimentInput):
             nutriments.carbohydrates_100g - nutriments.sugars_100g - nutriments.fiber_100g
         ],
         'other_fat_100g': [
-            nutriments.fat_100g - nutriments.saturated_fat_100g - nutriments.trans_fat_100g
+            nutriments.fat_100g - nutriments.saturated-fat_100g - nutriments.trans-fat_100g
         ],
     }
 
